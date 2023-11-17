@@ -26,7 +26,5 @@ jobs:
       - name: Run dagger
         if: ${{env.DOCKER_HUB_PASSWORD != ''}}
         run: python3 ci/docker_hub.py $DOCKER_HUB_PASSWORD
-      - name: Echo secret
-        run: echo "${{$DOCKER_HUB_PASSWORD}}"
       - name: secrete
         run: echo "$DOCKER_HUB_PASSWORD"
