@@ -23,6 +23,7 @@ async def main():
             .from_("python:3.11-slim-buster")
             .with_directory("/app", client.host().directory("."))
             .with_workdir("/app")
+            # .WithEnvVariable('PATH', '/root/.nvm/versions/node/v16.17.0/bin:$PATH')
             .with_exec(["pip", "install", "-r", "requirements.txt"])
             .with_exec(["pip", "install", "--upgrade", "openai==1.1.1"])
             .with_entrypoint(

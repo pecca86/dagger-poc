@@ -10,9 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print name
-        run: echo "My API_KEY is ${{secrets.DOCKER_HUB_PASSWORD}} . name is ${{ env.TEST_VAR }}"
-        env:
-          BUILD: 'We are currently running the Build job'
+        env: 
+          TEST_VAR: 'test'
+        run: echo "My API_KEY is ${{secrets.DOCKER_HUB_PASSWORD}} . name is ${{ env.TEST_VAR }} test var $TEST_VAR"
+    
       # - uses: actions/checkout@v3
       # - name: Set up Python 3.10
       #   uses: actions/setup-python@v3
