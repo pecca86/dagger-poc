@@ -16,7 +16,7 @@ jobs:
       - name: Print name
         run: | 
           echo My API_KEY is ${{ env.PIPPELI }} . PEKKA_VAR is ${{ env.PEKKA_VAR }} - TEST_VAR $TEST_VAR - LAST ${{ env.LAST }} - kakka is $KAKKA
-          echo OLLON is $PEKKA_VAR
+          echo PW is $OLLON
           echo NEKKE is $NEKKE
           echo KAKKA is $KAKKA
         env:
@@ -36,10 +36,5 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Install dagger
         run: pip install dagger-io
-      - shell: bash
-        env:
-          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
-        run: |
-          echo "pw $DOCKER_HUB_PASSWORD"
       - name: Run dagger
-        run: python3 ci/docker_hub.py $PIPPELI
+        run: python3 ci/docker_hub.py ${{ env.PIPPELI }}
