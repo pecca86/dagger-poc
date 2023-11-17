@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print name
-        run: echo "My API_KEY is ${{secrets.DOCKER_HUB_PASSWORD}}"
+        run: echo "My API_KEY is ${{secrets.DOCKER_HUB_PASSWORD}} . name is ${{ env.TEST_VAR }}"
         env:
           BUILD: 'We are currently running the Build job'
       # - uses: actions/checkout@v3
