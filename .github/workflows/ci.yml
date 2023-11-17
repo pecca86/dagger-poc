@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       TEST_VAR: 'test'
-      LAST: ${{ env.PEKKA_VAR }}
+      LAST: ${{ vars.DAGGER_TEST }}
     steps:
       - name: Print name
         run: echo My API_KEY is ${{secrets.DOCKER_HUB_PASSWORD}} . PEKKA_VAR is ${{ env.PEKKA_VAR }} - TEST_VAR $TEST_VAR - LAST $LAST
