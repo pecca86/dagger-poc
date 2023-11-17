@@ -9,7 +9,6 @@ import os
 
 async def main():
     async with dagger.Connection(dagger.Config(log_output=sys.stderr)) as client:
-        print("TESTING KEY: ", os.environ["DOCKER_HUB_PASSWORD"])
         print("ARGS: ", sys.argv)
         #Cache
         python_cache = client.cache_volume("python")
