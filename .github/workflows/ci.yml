@@ -14,8 +14,6 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: "3.10"
-        env:
-          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -24,6 +22,8 @@ jobs:
       - name: Install dagger
         run: pip install dagger-io
       - name: secrete
-        run: echo "$DOCKER_HUB_PASSWORD"
+        run: echo " my secret is $DOCKER_HUB_PASSWORD"
       - name: Run dagger
         run: python3 ci/docker_hub.py $DOCKER_HUB_PASSWORD
+        env:
+          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
