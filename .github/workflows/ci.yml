@@ -22,4 +22,4 @@ jobs:
       - name: Install dagger
         run: pip install dagger-io
       - name: Run dagger
-        run: python3 ci/docker_hub.py
+        run: python3 ci/docker_hub.py ${{ secrets.DOCKER_HUB_PASSWORD }}
