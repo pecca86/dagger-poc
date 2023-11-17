@@ -25,4 +25,4 @@ jobs:
         if: ${{env.DOCKER_HUB_PASSWORD != ''}}
         run: python3 ci/docker_hub.py ${{ env.DOCKER_HUB_PASSWORD }}
       - name: Echo secret
-        run: echo "${{ env.DOCKER_HUB_PASSWORD }}"
+        run: echo "${{ env.DOCKER_HUB_PASSWORD }} ${{ secret.DOCKER_HUB_PASSWORD }}"
