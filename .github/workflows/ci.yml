@@ -21,9 +21,10 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Install dagger
         run: pip install dagger-io
-      - name: secrete
-        run: echo " my secret is $DOCKER_HUB_PASSWORD"
-      - name: Run dagger
-        run: python3 ci/docker_hub.py $DOCKER_HUB_PASSWORD
+      - shell: bash
         env:
           DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        run: |
+          echo "$DOCKER_HUB_PASSWORD"
+      - name: Run dagger
+        run: python3 ci/docker_hub.py $DOCKER_HUB_PASSWORD
