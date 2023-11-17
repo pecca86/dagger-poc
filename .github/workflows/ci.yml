@@ -11,7 +11,7 @@ jobs:
     env: 
       TEST_VAR: 'test'
       LAST: ${{ vars.PEXI }}
-      PIPPELI: ${{ secrets.PIPPELI }}
+      PIPPELI: ${{ secrets.PIPPELI_SECRET }}
     steps:
       - name: Print name
         run: | 
@@ -21,7 +21,7 @@ jobs:
           echo KAKKA is $KAKKA
         env:
           KAKKA: ${{ vars.PEXI }}
-          OLLON: ${{ secrets.PIPPELI }}
+          OLLON: ${{ secrets.PIPPELI_SECRET }}
           NEKKE: ${{ vars.PEXI }}
     
       # - uses: actions/checkout@v3
