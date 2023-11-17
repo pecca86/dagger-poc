@@ -22,4 +22,7 @@ jobs:
       - name: Install dagger
         run: pip install dagger-io
       - name: Run dagger
-        run: python3 ci/docker_hub.py ${{ secrets.DOCKER_HUB_PASSWORD }}
+        if: ${{env.DOCKER_HUB_PASSWORD != ''}}
+        run: python3 ci/docker_hub.py ${{ env.DOCKER_HUB_PASSWORD }}
+      - name: Echo secret
+        run: echo "${{ env.DOCKER_HUB_PASSWORD }}"
