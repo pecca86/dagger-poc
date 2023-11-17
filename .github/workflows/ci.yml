@@ -10,10 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       TEST_VAR: 'test'
-      LAST: ${{ vars.DAGGER_TEST }}
+      LAST: ${{ vars.PEXI }}
     steps:
       - name: Print name
-        run: echo My API_KEY is ${{secrets.DOCKER_HUB_PASSWORD}} . PEKKA_VAR is ${{ env.PEKKA_VAR }} - TEST_VAR $TEST_VAR - LAST ${{ env.LAST }}
+        run: echo My API_KEY is ${{secrets.DOCKER_HUB_PASSWORD}} . PEKKA_VAR is ${{ env.PEKKA_VAR }} - TEST_VAR $TEST_VAR - LAST ${{ env.LAST }} - kakka is $KAKKA
+        env:
+          KAKKA: ${{ vars.PEXI }}
     
       # - uses: actions/checkout@v3
       # - name: Set up Python 3.10
