@@ -1,0 +1,16 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+*.egg
+venv/
+instagram_images/
+twitter_images/
+dall_e_img/
+.cache/
+installed_requirements_local.txt
+pip3_installed_requirements_local.txt
+old_requirements.txt

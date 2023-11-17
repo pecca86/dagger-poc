@@ -1,0 +1,13 @@
+name: dagger
+on:
+  pull_request:
+    branches:
+      - master
+jobs:
+  dagger:
+    name: dagger
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: pip install dagger-io
+      - run: python3 ci/docker_hub.py
