@@ -5,12 +5,11 @@ import anyio
 import dagger
 
 import sys
-import os
+
 
 async def main():
     async with dagger.Connection(dagger.Config(log_output=sys.stderr)) as client:
-        print("ARGS: ", sys.argv)
-        #Cache
+        # Cache
         python_cache = client.cache_volume("python")
         password_argument = sys.argv[1]
         # set secret as string value
@@ -25,6 +24,31 @@ async def main():
             # .WithEnvVariable('PATH', '/root/.nvm/versions/node/v16.17.0/bin:$PATH')
             .with_exec(["pip", "install", "-r", "requirements.txt"])
             .with_exec(["pip", "install", "--upgrade", "openai==1.1.1"])
+            .with_exec(["apt", "install", "curl", "-y"])
+            .with_exec(
+                [
+                    "curl",
+                    "-s",
+                    "https://ngrok-agent.s3.amazonaws.com/ngrok.asc",
+                    "|",
+                    "tee",
+                    "/etc/apt/trusted.gpg.d/ngrok.asc",
+                    ">/dev/null",
+                    "&&",
+                    "echo",
+                    '"deb https://ngrok-agent.s3.amazonaws.com buster main"',
+                    "|",
+                    "tee",
+                    "/etc/apt/sources.list.d/ngrok.list",
+                    "&&",
+                    "apt",
+                    "update",
+                    "&&",
+                    "apt",
+                    "install",
+                    "ngrok",
+                ]
+            )
             .with_entrypoint(
                 ["python3", "project_gin.py", "-t", "theme", "-p", "twitter"]
             )
@@ -32,9 +56,9 @@ async def main():
         )
 
         # use secret for registry authentication
-        addr = await source.with_registry_auth(
-            "docker.io", "pecca86", secret
-        ).publish("pecca86/poc:2")
+        addr = await source.with_registry_auth("docker.io", "pecca86", secret).publish(
+            "pecca86/poc:2"
+        )
 
     print(f"Published at: {addr}")
 
