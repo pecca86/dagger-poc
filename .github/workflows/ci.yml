@@ -12,7 +12,7 @@ jobs:
       TEST_VAR: 'test'
     steps:
       - name: Print name
-        run: echo My API_KEY is ${{secrets.DOCKER_HUB_PASSWORD}} . name is ${{ env.TEST_VAR }} test var $TEST_VAR
+        run: echo My API_KEY is ${{secrets.DOCKER_HUB_PASSWORD}} . name is ${{ env.PEKKA_VAR }} test var $TEST_VAR
     
       # - uses: actions/checkout@v3
       # - name: Set up Python 3.10
