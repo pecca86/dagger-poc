@@ -8,11 +8,11 @@ jobs:
   dagger:
     name: dagger
     runs-on: ubuntu-latest
+    env: 
+      TEST_VAR: 'test'
     steps:
       - name: Print name
-        env: 
-          TEST_VAR: 'test'
-        run: echo "My API_KEY is ${{secrets.DOCKER_HUB_PASSWORD}} . name is ${{ env.TEST_VAR }} test var $TEST_VAR"
+        run: echo My API_KEY is ${{secrets.DOCKER_HUB_PASSWORD}} . name is ${{ env.TEST_VAR }} test var $TEST_VAR
     
       # - uses: actions/checkout@v3
       # - name: Set up Python 3.10
