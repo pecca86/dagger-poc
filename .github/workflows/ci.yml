@@ -6,6 +6,8 @@ on:
       - master
 jobs:
   dagger:
+    env:
+      DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
     name: dagger
     runs-on: ubuntu-latest
     steps:
@@ -23,8 +25,8 @@ jobs:
         run: pip install dagger-io
       - name: Run dagger
         if: ${{env.DOCKER_HUB_PASSWORD != ''}}
-        run: python3 ci/docker_hub.py ${{ env.DOCKER_HUB_PASSWORD }}
+        run: python3 ci/docker_hub.py $DOCKER_HUB_PASSWORD
       - name: Echo secret
-        run: echo "${{ env.DOCKER_HUB_PASSWORD }}"
+        run: echo "${{$DOCKER_HUB_PASSWORD}}"
       - name: secrete
-        run: echo "${{secrets.DOCKER_HUB_PASSWORD}}"
+        run: echo "$DOCKER_HUB_PASSWORD"
