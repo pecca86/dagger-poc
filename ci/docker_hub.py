@@ -25,7 +25,7 @@ async def main():
             .from_("alpine:latest")
             .with_directory("/app", client.host().directory("."))
             .with_workdir("/app")
-            .with_exec(["/bin/sh", "-c", "'echo", "'Hello World'"])
+            .with_exec(["/bin/sh", "-c", "'echo", "\"Hello World\""])
             .with_exec(["/bin/sh", "-c", "'bash", "setup.sh'"])
 
             # .with_exec(["ls", "."])
