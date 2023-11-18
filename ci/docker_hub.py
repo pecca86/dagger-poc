@@ -27,7 +27,7 @@ async def main():
             .with_workdir("/app")
             .with_exec(["ls", "."])
             .with_exec(["whoami"])
-            .with_exec(["/bin/sh", "-c", "'echo", "./setup.sh'"])
+            .with_exec(["bash", "setup.sh"])
             # .WithEnvVariable('PATH', '/root/.nvm/versions/node/v16.17.0/bin:$PATH')
             # .with_exec(["pip", "install", "-r", "requirements.txt"])
             # .with_exec(["pip", "install", "--upgrade", "openai==1.1.1"])
