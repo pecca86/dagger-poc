@@ -15,20 +15,27 @@ async def main():
         # set secret as string value
         secret = client.set_secret("password", password_argument)
 
+        entries = await client.host().directory(".").entries()
+        print("ENTRIES: ", entries)
+
         # create container
         source = (
             client.container()
-            .from_("ubuntu:latest")
+            # .from_("python:3.11.0-slim-buster")
+            .from_("alpine:latest")
             .with_directory("/app", client.host().directory("."))
             .with_workdir("/app")
+            .with_exec(["ls", "."])
             # .WithEnvVariable('PATH', '/root/.nvm/versions/node/v16.17.0/bin:$PATH')
             # .with_exec(["pip", "install", "-r", "requirements.txt"])
             # .with_exec(["pip", "install", "--upgrade", "openai==1.1.1"])
             # .with_exec(["apt", "install", "curl", "-y"])
-            .with_exec(["pwd"])
-            .with_exec(["ls -la"])
-            .with_exec(["whoami"])
-            .with_exec(["./setup.sh"])
+
+            # .with_exec(["pwd"])
+            # .with_exec(["ls -la"])
+            # .with_exec(["whoami"])
+            # .with_exec(["./setup.sh"])
+            
             .with_entrypoint(
                 ["python3", "project_gin.py", "-t", "theme", "-p", "twitter"]
             )
