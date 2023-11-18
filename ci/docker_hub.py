@@ -10,10 +10,10 @@ import sys
 async def main():
     async with dagger.Connection(dagger.Config(log_output=sys.stderr)) as client:
         # Cache
-        python_cache = client.cache_volume("python")
+        # python_cache = client.cache_volume("python")
         password_argument = sys.argv[1]
         # set secret as string value
-        secret = client.set_secret("password", password_argument)
+        # secret = client.set_secret("password", password_argument)
 
         entries = await client.host().directory(".").entries()
         print("ENTRIES: ", entries)
@@ -51,11 +51,11 @@ async def main():
         )
 
         # use secret for registry authentication
-        addr = await source.with_registry_auth("docker.io", "pecca86", secret).publish(
-            "pecca86/poc:2"
-        )
+        # addr = await source.with_registry_auth("docker.io", "pecca86", secret).publish(
+        #     "pecca86/poc:2"
+        # )
 
-    print(f"Published at: {addr}")
+    # print(f"Published at: {addr}")
 
 
 anyio.run(main)
