@@ -52,6 +52,7 @@ async def main():
                     }
                 )
             )
+            .with_exec(["env"])
         )
 
         # use secret for registry authentication
