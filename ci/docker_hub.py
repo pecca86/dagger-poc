@@ -15,8 +15,9 @@ async def main():
         python_cache = client.cache_volume("python")
         #print all environment variables
         print(os.environ)
+
         # set secret from argument
-        password_argument = sys.argv[1]
+        password_argument = "" # os.environ.get("DOCKER_HUB_PASSWORD") #sys.argv[1]
         # set secret as string value
         secret = client.set_secret("password", password_argument)
         # create container
@@ -26,7 +27,6 @@ async def main():
             .from_("ubuntu:latest")
             .with_directory("/app", client.host().directory("."), exclude=["ci/", "configs/.env"])
             .with_workdir("/app")
-            .with_exec(["echo", "hello world"])
             .with_exec(["/bin/sh", "setup.sh"])
             .with_entrypoint(
                 ["python3", "project_gin.py", "-t", "theme", "-p", "twitter"]

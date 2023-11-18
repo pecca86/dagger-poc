@@ -9,21 +9,20 @@ jobs:
     name: dagger
     runs-on: ubuntu-latest
     env: 
-      TEST_VAR: 'test'
-      LAST: ${{ vars.PEXI }}
-      DOCKER_HUB_PW: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
+      TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
+      TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+      TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+      TWITTER_BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
+      TWITTER_OAUTH2_CLIENT_ID: ${{ secrets.TWITTER_OAUTH2_CLIENT_ID }}
+      TWITTER_OAUTH2_CLIENT_SECRET: ${{ secrets.TWITTER_OAUTH2_CLIENT_SECRET }}
+      TWITTER_WITH_IMAGE: ${{ vars.TWITTER_WITH_IMAGE }}
+      INSTAGRAM_LONG_TERM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_LONG_TERM_ACCESS_TOKEN }}
+      META_INSTAGRAM_APP_ID: ${{ secrets.META_INSTAGRAM_APP_ID }}
+      AUTOGEN_MODEL: ${{ vars.AUTOGEN_MODEL }}
     steps:
-      - name: Print name
-        run: | 
-          echo My API_KEY is ${{ env.PIPPELI }} . PEKKA_VAR is ${{ env.PEKKA_VAR }} - TEST_VAR $TEST_VAR - LAST ${{ env.LAST }} - kakka is $KAKKA
-          echo PW is $OLLON
-          echo NEKKE is $NEKKE
-          echo KAKKA is $KAKKA
-        env:
-          KAKKA: ${{ vars.PEXI }}
-          OLLON: ${{ secrets.PIPPELI_SECRET }}
-          NEKKE: ${{ vars.PEXI }}
-    
       - uses: actions/checkout@v3
       - name: Set up Python 3.10
         uses: actions/setup-python@v3
@@ -39,4 +38,4 @@ jobs:
         env: 
           PIPPELI: 'pipeli'
       - name: Run dagger
-        run: python3 ci/docker_hub.py ${{ env.DOCKER_HUB_PW }}
+        run: python3 ci/docker_hub.py
