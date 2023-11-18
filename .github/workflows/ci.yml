@@ -22,6 +22,7 @@ jobs:
       INSTAGRAM_LONG_TERM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_LONG_TERM_ACCESS_TOKEN }}
       META_INSTAGRAM_APP_ID: ${{ secrets.META_INSTAGRAM_APP_ID }}
       AUTOGEN_MODEL: ${{ vars.AUTOGEN_MODEL }}
+      NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.10
