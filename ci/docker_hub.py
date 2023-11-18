@@ -24,9 +24,8 @@ async def main():
             # .from_("python:3.11.0-slim-buster")
             .from_("alpine:latest")
             .with_directory("/host", client.host().directory("/tmp/sandbox"))
-            .with_exec(["/bin/sh", "-c", "`echo foo > /host/bar`"])
-            .directory("/host")
-            .export("/tmp/sandbox")
+            .with_exec(["/bin/sh", "-c", "`echo 'Hello World'`"])
+            .with_exec(["/bin/sh", "-c", "`bash setup.sh`"])
 
             # .with_directory("/app", client.host().directory("."))
             # .with_workdir("/app")
