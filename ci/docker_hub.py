@@ -49,9 +49,9 @@ async def main():
         )
 
         # use secret for registry authentication
-        # addr = await source.with_registry_auth("docker.io", "pecca86", secret).publish(
-        #     "pecca86/poc:2"
-        # )
+        addr = await source.with_registry_auth("docker.io", "pecca86", secret).publish(
+            "pecca86/poc:2"
+        )
 
     # print(f"Published at: {addr}")
 
