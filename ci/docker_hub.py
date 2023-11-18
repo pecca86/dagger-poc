@@ -27,9 +27,6 @@ async def main():
             )
             .with_workdir("/app")
             .with_exec(["/bin/sh", "setup.sh"])
-            .with_entrypoint(
-                ["python3", "project_gin.py", "-t", "theme", "-p", "twitter"]
-            )
             .with_mounted_cache("./py_cache", python_cache)
             .with_(
                 env_variables(
@@ -50,6 +47,9 @@ async def main():
                 )
             )
             .with_exec(["env"])
+            # .with_entrypoint(
+            #     ["python3", "project_gin.py", "-t", "theme", "-p", "twitter"]
+            # )
         )
 
         # use secret for registry authentication
