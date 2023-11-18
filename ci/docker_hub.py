@@ -44,9 +44,9 @@ async def main():
             # .with_exec(["whoami"])
             # .with_exec(["./setup.sh"])
             
-            .with_entrypoint(
-                ["python3", "project_gin.py", "-t", "theme", "-p", "twitter"]
-            )
+            # .with_entrypoint(
+            #     ["python3", "project_gin.py", "-t", "theme", "-p", "twitter"]
+            # )
             .with_mounted_cache("./py_cache", python_cache)
         )
 
