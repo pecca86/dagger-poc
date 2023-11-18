@@ -4,8 +4,6 @@ import autogen
 
 class AppConfig:
     def __init__(self):
-        self.app_name = "Gin Media Team"
-        self.app_version = "1.0.0"
         # Config for autogen
         self.autogen_model = config("AUTOGEN_MODEL")
         self.autogen_config_list = [

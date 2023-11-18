@@ -1,5 +1,5 @@
 # #!/bin/bash
-
+echo "===> Installing dependencies..."
 apt update -y
 apt upgrade -y
 apt-get install -y python3-pip python3-dev build-essential
@@ -15,6 +15,4 @@ pip install --no-cache-dir -r /app/requirements.txt
 pip install --upgrade openai==1.1.1
 echo $NGROK_TOKEN
 ngrok config add-authtoken $NGROK_TOKEN
-# cd app
-# python3 project_gin.py -t "Stookers Gin" -p twitter
-echo "Hello World"
+echo "===> Installation complete!"

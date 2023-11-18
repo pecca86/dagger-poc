@@ -6,11 +6,15 @@ import dagger
 
 import sys
 
+import os
+
 
 async def main():
     async with dagger.Connection(dagger.Config(log_output=sys.stderr)) as client:
         # Cache
         python_cache = client.cache_volume("python")
+        #print all environment variables
+        print(os.environ)
         # set secret from argument
         password_argument = sys.argv[1]
         # set secret as string value
@@ -20,7 +24,7 @@ async def main():
             client.container()
             # .from_("python:3.11.0-slim-buster")
             .from_("ubuntu:latest")
-            .with_directory("/app", client.host().directory("."))
+            .with_directory("/app", client.host().directory("."), exclude=["ci/", "configs/.env"])
             .with_workdir("/app")
             .with_exec(["echo", "hello world"])
             .with_exec(["/bin/sh", "setup.sh"])
