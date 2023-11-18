@@ -11,13 +11,14 @@ class TwitterAnalytics:
         return result
     
     def twitter_data(self):
-        loader = CSVLoader(
-            file_path="./analytics_data/likes_per_tweet.csv",
-            csv_args={"delimiter": "|", "quotechar": '"', "fieldnames": ["tweet_id", "tweet_text", "timestamp", "likes"]},
-        )
+        # loader = CSVLoader(
+        #     file_path="./analytics_data/likes_per_tweet.csv",
+        #     csv_args={"delimiter": "|", "quotechar": '"', "fieldnames": ["tweet_id", "tweet_text", "timestamp", "likes"]},
+        # )
 
-        data = loader.load()
-        return data
+        # data = loader.load()
+        # return data
+        return self._retrieve_tweet_data()
 
 
     def _retrieve_tweet_data(self):
