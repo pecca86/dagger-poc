@@ -17,7 +17,7 @@ async def main():
         print(os.environ)
 
         # set secret from argument
-        password_argument = "" # os.environ.get("DOCKER_HUB_PASSWORD") #sys.argv[1]
+        password_argument = os.environ.get("DOCKER_HUB_PASSWORD") #sys.argv[1]
         # set secret as string value
         secret = client.set_secret("password", password_argument)
         # create container
