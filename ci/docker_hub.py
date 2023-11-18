@@ -12,10 +12,7 @@ import os
 async def main():
     async with dagger.Connection(dagger.Config(log_output=sys.stderr)) as client:
         # Cache
-        python_cache = client.cache_volume("python")
-        # print all environment variables that are passed into GitHub actions, from the repository secrets
-        print(os.environ)
-
+        python_cache = client.cache_volume("python") 
         # set secret from argument
         password_argument = os.environ.get("DOCKER_HUB_PASSWORD")  # sys.argv[1]
         # set secret as string value
@@ -62,11 +59,11 @@ async def main():
 
     print(f"Published at: {addr}")
 
-
+# all environment variables that are passed into GitHub actions, from the repository secrets
 def env_variables(envs: dict[str, str]):
     def env_variables_inner(source: dagger.Container):
         for key, value in envs.items():
-            source = source.with_env(key, value)
+            source = source.with_env_variable(key, value)
         return source
     return env_variables_inner
 
