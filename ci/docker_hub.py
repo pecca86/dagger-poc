@@ -25,6 +25,9 @@ async def main():
             # .with_exec(["pip", "install", "-r", "requirements.txt"])
             # .with_exec(["pip", "install", "--upgrade", "openai==1.1.1"])
             # .with_exec(["apt", "install", "curl", "-y"])
+            .with_exec(["pwd"])
+            .with_exec(["ls -la"])
+            .with_exec(["whoami"])
             .with_exec(["./setup.sh"])
             .with_entrypoint(
                 ["python3", "project_gin.py", "-t", "theme", "-p", "twitter"]
