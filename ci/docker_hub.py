@@ -8,6 +8,7 @@ import sys
 
 import os
 
+from decouple import config
 
 async def main():
     async with dagger.Connection(dagger.Config(log_output=sys.stderr)) as client:

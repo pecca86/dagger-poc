@@ -76,6 +76,7 @@ class TeamTwitter:
 
         tweet_text = ""
         for v in user_proxy._oai_messages.values():
+            # tweet_text = v[-2]["content"]
             tweet_text = v[-2]["content"]
 
         if with_image:
