@@ -1,4 +1,4 @@
-name: dagger
+name: dagger-ci
 on:
   push:
   pull_request:
@@ -36,7 +36,5 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Install dagger
         run: pip install dagger-io
-        env: 
-          PIPPELI: 'pipeli'
       - name: Run dagger
         run: python3 ci/docker_hub.py

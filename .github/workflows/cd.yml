@@ -1,0 +1,55 @@
+name: dagger-cd
+on: 
+  push:
+  pull_request:
+    branches: [main, master]
+
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to deploy'
+        required: true
+        default: 'latest'
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: eu-north-1
+  DOCKER_HUB_USERNAME: pecca86
+  CI: false
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: fateyan/action-discord-notifier@v1
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          title: "Deploying ${{ github.repository }} to ${{ github.ref }}"
+          description: "Deploying ${{ github.repository }} to ${{ github.ref }} by ${{ github.actor }}"
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: Docker Login
+        uses: docker/login-action@f3364599c6aa293cdc2b8391b1b56d0c30e45c8a
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - uses: fateyan/action-discord-notifier@v1
+        with:
+          message-title: ${{ job.status }}
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      - name: Beanstalk Deploy
+        uses: einaregilsson/beanstalk-deploy@ebe3476a4ce991d54336935e75e78dd9d86f9408
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: ${{ env.AWS_REGION }}
+          environment_name: ${{ env.EB_ENVIRONMENT_NAME }}
+          application_name: ${{ env.EB_APPLICATION_NAME }}
+          deployment_package: ${{ env.EB_DEPLOYMENT_PACKAGE }}
+          version_label: ${{ steps.build-number.outputs.BUILD_NUMBER }}
+          version_description: Version ${{steps.build-number.outputs.BUILD_NUMBER}} deployed via github actions ${{ github.sha }}
+          wait_for_deployment: 60
+

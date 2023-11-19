@@ -21,7 +21,8 @@ async def main():
         source = (
             client.container()
             # .from_("python:3.11.0-slim-buster")
-            .from_("ubuntu:latest")
+            # .from_("ubuntu:latest")
+            .from_("arm64v3/ubuntu:latest")
             .with_directory(
                 "/app", client.host().directory("."), exclude=["ci/", "configs/.env"]
             )
@@ -54,7 +55,7 @@ async def main():
 
         # use secret for registry authentication
         addr = await source.with_registry_auth("docker.io", "pecca86", secret).publish(
-            "pecca86/poc:2"
+            "pecca86/poc:latest"
         )
 
     print(f"Published at: {addr}")
