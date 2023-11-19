@@ -29,7 +29,7 @@ async def main():
             )
             .with_workdir("/app")
             # .with_exec(["/bin/sh", "setup.sh"])
-            .with_exec(["/bin/bash", "setup.sh"])
+            # .with_exec(["/bin/bash", "setup.sh"])
             .with_mounted_cache("./py_cache", python_cache)
             .with_(
                 env_variables(
