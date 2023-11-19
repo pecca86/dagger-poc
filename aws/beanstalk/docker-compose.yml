@@ -1,0 +1,4 @@
+version: "3.8"
+services:
+  backend:
+    image: pecca86/poc:2
