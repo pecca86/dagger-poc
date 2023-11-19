@@ -23,7 +23,7 @@ async def main():
             client.container()
             # .from_("python:3.11.0-slim-buster")
             # .from_("ubuntu:latest")
-            .from_("linux/amd64:latest")
+            .from_("amd64/alpine")
             # .from_("arm64v8/ubuntu:latest")
             .with_directory(
                 "/app", client.host().directory("."), exclude=["ci/", "configs/.env"]
