@@ -31,25 +31,25 @@ async def main():
             # .with_exec(["/bin/sh", "setup.sh"])
             # .with_exec(["/bin/bash", "setup.sh"])
             .with_mounted_cache("./py_cache", python_cache)
-            .with_(
-                env_variables(
-                    {
-                        "OPENAI_API_KEY": os.environ.get("OPENAI_API_KEY"),
-                        "TWITTER_CONSUMER_KEY": os.environ.get("TWITTER_CONSUMER_KEY"),
-                        "TWITTER_CONSUMER_SECRET": os.environ.get("TWITTER_CONSUMER_SECRET"),
-                        "TWITTER_ACCESS_TOKEN": os.environ.get("TWITTER_ACCESS_TOKEN"),
-                        "TWITTER_ACCESS_TOKEN_SECRET": os.environ.get("TWITTER_ACCESS_TOKEN_SECRET"),
-                        "TWITTER_BEARER_TOKEN": os.environ.get("TWITTER_BEARER_TOKEN"),
-                        "TWITTER_OAUTH2_CLIENT_ID": os.environ.get("TWITTER_OAUTH2_CLIENT_ID"),
-                        "TWITTER_OAUTH2_CLIENT_SECRET": os.environ.get("TWITTER_OAUTH2_CLIENT_SECRET"),
-                        "TWITTER_WITH_IMAGE": os.environ.get("TWITTER_WITH_IMAGE"),
-                        "INSTAGRAM_LONG_TERM_ACCESS_TOKEN": os.environ.get("INSTAGRAM_LONG_TERM_ACCESS_TOKEN"),
-                        "META_INSTAGRAM_APP_ID": os.environ.get("META_INSTAGRAM_APP_ID"),
-                        "AUTOGEN_MODEL": os.environ.get("AUTOGEN_MODEL"),
-                    }
-                )
-            )
-            .with_exec(["env"])
+            # .with_(
+            #     env_variables(
+            #         {
+            #             "OPENAI_API_KEY": os.environ.get("OPENAI_API_KEY"),
+            #             "TWITTER_CONSUMER_KEY": os.environ.get("TWITTER_CONSUMER_KEY"),
+            #             "TWITTER_CONSUMER_SECRET": os.environ.get("TWITTER_CONSUMER_SECRET"),
+            #             "TWITTER_ACCESS_TOKEN": os.environ.get("TWITTER_ACCESS_TOKEN"),
+            #             "TWITTER_ACCESS_TOKEN_SECRET": os.environ.get("TWITTER_ACCESS_TOKEN_SECRET"),
+            #             "TWITTER_BEARER_TOKEN": os.environ.get("TWITTER_BEARER_TOKEN"),
+            #             "TWITTER_OAUTH2_CLIENT_ID": os.environ.get("TWITTER_OAUTH2_CLIENT_ID"),
+            #             "TWITTER_OAUTH2_CLIENT_SECRET": os.environ.get("TWITTER_OAUTH2_CLIENT_SECRET"),
+            #             "TWITTER_WITH_IMAGE": os.environ.get("TWITTER_WITH_IMAGE"),
+            #             "INSTAGRAM_LONG_TERM_ACCESS_TOKEN": os.environ.get("INSTAGRAM_LONG_TERM_ACCESS_TOKEN"),
+            #             "META_INSTAGRAM_APP_ID": os.environ.get("META_INSTAGRAM_APP_ID"),
+            #             "AUTOGEN_MODEL": os.environ.get("AUTOGEN_MODEL"),
+            #         }
+            #     )
+            # )
+            # .with_exec(["env"])
             # .with_entrypoint(
             #     ["python3", "project_gin.py", "-t", "theme", "-p", "twitter"]
             # )
