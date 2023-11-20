@@ -15,7 +15,7 @@ async def main():
         # Cache
         python_cache = client.cache_volume("python") 
         # set secret from argument
-        password_argument = os.environ.get("DOCKER_HUB_PASSWORD")  # sys.argv[1]
+        password_argument = os.environ.get("DOCKER_HUB_PASSWORD")
         # set secret as string value
         secret = client.set_secret("password", password_argument)
         # create container
@@ -52,9 +52,10 @@ async def main():
                 )
             )
             .with_exec(["env"])
-            # .with_entrypoint(
-            #     ["python3", "project_gin.py", "-t", "theme", "-p", "twitter"]
-            # )
+            .with_entrypoint(
+                # ["python3", "project_gin.py", "-t", "theme", "-p", "twitter"]
+                ["python3", "project_gin.py", "-p", "twitter", "instagram", "-a" "True"]
+            )
         )
 
         # use secret for registry authentication

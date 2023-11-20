@@ -6,6 +6,7 @@ from enums.platform import Platform
 from research_teams.agents.researcher import Researcher
 from research_teams.agents.critic import Critic
 from configs.app_config import AppConfig
+from configs.prompt_config import *
 
 # TODO: Add logging
 logger = logging.getLogger(__name__)
@@ -25,25 +26,21 @@ class ResearchTeam:
         scraped_web_data = scraper.scrape(Platform.WEB)
 
         # Create the Researcher Agent
+        # TODO: Turn in to a RAG agent
         researcher_name = "researcher"
         researcher = Researcher(
             researcher_name,
-            f"You are the {researcher_name}. You will be given raw information with the theme of: {self.theme}. You will then use the information you find to write a short summary of the topic. After each iteration you will wait for the reviewer's feedback on the content. The information: {str(scraped_platform_data)} and \n {str(scraped_web_data)}",
+            instagram_research_agent['prompt'].replace("{researcher_name}", researcher_name).replace("{theme}", self.theme),
             self.config.autogen_config_list,
         )
         researcher_agent = researcher.retrieve_agent()
 
         # Create the Critic Agent
-        criteria_list = [
-            "Is the text relevant to the topic?",
-            "Is the text grammatically correct?",
-            "Is the text concise?",
-            "Based on the knowledge you have, are the facts correct?",
-        ]
-        critic_name = "critic"
+        criteria_list = str(instagram_research_critic['criteria_list'])
+        critic_name = instagram_research_critic['name']
         critic = Critic(
             critic_name,
-            f"You are the {critic_name}. You give a rating on from 1 to 5 on the researchers suggestions. The rating is based on the following list: {criteria_list}. You will give concrete suggestions if the score is under 5. You will give feedback if the result does not have four pointer, containing the criteria given by the user_proxy You will pause and wait for user feedback after giving 4 / 5 or above.",
+            instagram_research_critic['prompt'].replace("{critic_name}", critic_name).replace("{criteria_list}", criteria_list),
             self.config.autogen_config_list,
         )
         critic_agent = critic.retrieve_agent()
@@ -70,7 +67,7 @@ class ResearchTeam:
 
         user_proxy.initiate_chat(
             manager,
-            message=f"Distil the input information related to the theme: {self.theme} into four elements: 1. insights 2.fun facts 3.recepies 4. something related to Stookers gin. Do not thank each other for the feedback.",
+            message=instagram_research_user['prompt'].replace("{theme}", self.theme),
         )
 
         # Get results

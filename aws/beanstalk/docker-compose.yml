@@ -1,5 +1,5 @@
 version: "3.8"
 services:
   backend:
-    platform: linux/arm64/v8
+    platform: amd64/ubuntu
     image: pecca86/poc:2

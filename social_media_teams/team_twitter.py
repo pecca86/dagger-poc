@@ -25,7 +25,7 @@ class TeamTwitter:
         # TODO: Create a Analytics agent or not?
         analytics_agent = autogen.AssistantAgent("analytics_agent", llm_config={"config_list": self.config.autogen_config_list}, system_message=f"You are a analyst. You are tasked with drawing conclusion the this set of data that has been loaded with langchain CSVLoader: {data}. You will then provide some insights and focus points to the tweeter based on this.")
         user_proxy = autogen.UserProxyAgent("user_proxy", code_execution_config=False)
-        user_proxy.initiate_chat(analytics_agent, message=f"What conclusions can you draw from this twitter data that has been loaded with langchain CSVLoader: {data} and what focus points can you give the creator of the tweets based on this? ")
+        user_proxy.initiate_chat(analytics_agent, message=f"What conclusions can you draw from this twitter data that has been loaded with langchain CSVLoader: {data} and what focus points can you give the creator of the tweets based on this?")
 
         # Tweeter
         tweeter_name = "tweeter"

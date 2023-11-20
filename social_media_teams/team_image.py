@@ -8,6 +8,7 @@ import os
 import shutil
 import time
 from configs.app_config import AppConfig
+from configs.prompt_config import *
 
 
 # TODO: Add logging
@@ -19,12 +20,15 @@ class TeamImage:
         self.prompt = prompt
         self.config = AppConfig()
 
-    def create_image(self, save_folder:str, ) -> str:
+    def create_image(
+        self,
+        save_folder: str,
+    ) -> str:
         # Image / prompt agent
         image_agent_name = "image_agent"
         image_agent = ImageAgent(
             image_agent_name,
-            f"You are the {image_agent_name}. You will create a prompt based on this text: {self.prompt}. The prompts should be short and descriptive, so that it can be used in dall-e 3 for creating a prompt based image.",
+            instagram_image_creator["prompt"].replace("{image_agent_name}", image_agent_name).replace("{prompt}", self.prompt).replace("{banned_words}", "bottle"),
             self.config.autogen_config_list,
         )
         image_agent_agent = image_agent.retrieve_agent()
@@ -111,7 +115,7 @@ class TeamImage:
 
         user_proxy.initiate_chat(
             manager,
-            message="You are part of a team consisting: 1. an image_agent, that creates prompts that are then used for creating an image. 2. A function_agent that uses the propmt by the image agent to call a function, which returns an url. 3. A coder_agent that creates a python code for downloading an image from an url 4. A user_proxy that executes the python code using the command python3. Do not thank each other for the feedback.",
+            message=instagram_image_user["prompt"].replace("{image_agent_name}", image_agent_name),
             code_execution_config=False,
         )
 
