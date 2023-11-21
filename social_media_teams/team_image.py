@@ -19,6 +19,8 @@ class TeamImage:
     def __init__(self, prompt: str) -> None:
         self.prompt = prompt
         self.config = AppConfig()
+        logging.info("** PHASE: Image Creation **")
+        
 
     def create_image(
         self,
@@ -118,6 +120,15 @@ class TeamImage:
             message=instagram_image_user["prompt"].replace("{image_agent_name}", image_agent_name),
             code_execution_config=False,
         )
+
+        # Collect logs:
+        msg_dic = manager._oai_messages
+        for k, v in msg_dic.items():
+            logging.info("\n\nFull Conversation: \n")
+            for item in v:
+                logging.info(f"[{item['name']}]: {item['content']}\n")
+            break
+
 
         # Move the image to the twitter_images folder and give it an unique name
         unique_filename = move_file_and_add_time_stamp(

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <title>Chat replay</title>
+  </head>
+  <body>
+    <div class="heading">
+      <h1>Chat replay</h1>
+    </div>
+
+    <main>
+      <div id="chat-window"></div>
+    </main>
+
+
+    <div class="upload">
+      <input
+        type="file"
+        id="fileInput"
+        accept=".log"
+        onchange="watchfileInput(this.files)" />
+      <!-- <button id="filebutton" class="button">File Upload</button> -->
+    </div>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>

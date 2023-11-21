@@ -7,6 +7,7 @@ import time
 import re
 from configs.app_config import AppConfig
 from enums.platform import Platform
+import logging
 
 
 # TODO: Check how to upload media (If available under free plan...)
@@ -14,13 +15,14 @@ class Tweeter:
     def __init__(self, tweet):
         self.tweet = tweet
         self.config = AppConfig()
+        logging.info("** PHASE: Tweeter **")
 
     def save_tweet_data(self, tweet_data: json, with_image_data=False):
         """
         Save tweet data to a file to be used for analytics
         """
-        #TODO: On media flow, save the media_id as well1
-        print("ID: ", tweet_data['data']['id'])
+        # TODO: On media flow, save the media_id as well1
+        print("ID: ", tweet_data["data"]["id"])
         timestamp = str(int(time.time()))
         save_to_csv(
             "own_tweets.csv",
@@ -29,18 +31,23 @@ class Tweeter:
             Platform.TWITTER,
         )
 
-    #TODO: Create a flow for uploading images
+    # TODO: Create a flow for uploading images
     # This requires a different endpoint for first uploading the image, then using the media_id for the tweet
     def post_tweet(self, image=None) -> json:
         payload = {"text": self.tweet}
-        print("Payload: ", payload['text'])
-        
-        cleaned_payload = re.sub('^"|"$', '', payload['text']) #cleans the double quotes from the tweet
-        payload['text'] = cleaned_payload
+        print("Payload: ", payload["text"])
+
+        cleaned_payload = re.sub(
+            '^"|"$', "", payload["text"]
+        )  # cleans the double quotes from the tweet
+        payload["text"] = cleaned_payload
 
         # Get request token
         request_token_url = "https://api.twitter.com/oauth/request_token?oauth_callback=oob&x_auth_access_type=write"
-        oauth = OAuth1Session(self.config.twitter_consumer_key, client_secret=self.config.twitter_consumer_secret)
+        oauth = OAuth1Session(
+            self.config.twitter_consumer_key,
+            client_secret=self.config.twitter_consumer_secret,
+        )
 
         try:
             fetch_response = oauth.fetch_request_token(request_token_url)
@@ -95,6 +102,7 @@ class Tweeter:
             )
 
         print("Response code: {}".format(response.status_code))
+        logging.info("Tweet successfully posted.")
 
         # Saving the response as JSON
         json_response = response.json()

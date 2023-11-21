@@ -1,0 +1,77 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem;
+}
+
+.heading {
+    text-align: center;
+    margin: 1rem;
+}
+
+.upload {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 1rem;
+}
+
+#chat-window {
+    display: flex;
+    /* align-items: center; */
+    flex-direction: column;
+    max-width: 80%;
+    margin: 2%;
+}
+
+.phase {
+  background-color: yellow;
+  border-bottom: 5px solid #6767e4;
+  padding: 2rem;
+  margin: 1rem;
+  border-radius: 10px;
+  border: 1px solid black;
+  font-size: 1.7rem;
+  border-bottom: 5px solid #000000;
+}
+
+.phase::after {
+    content: "Best value";
+    position: absolute;
+    top: 6%;
+    right: -18%;
+    text-transform: uppercase;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #333;
+    background-color: #ffd43b;
+    padding: 0.8rem 8rem;
+    transform: rotate(45deg);
+}
+
+.system {
+  background-color: lightgreen;
+  border: 1px solid black;
+  border-bottom: 5px solid #6767e4;
+  padding: 0.3rem;
+  margin: 1rem;
+  border-radius: 10px;
+}
+
+.message-border {
+    border: 1px solid black;
+    background-color: lightblue;
+    border-bottom: 5px solid #6767e4;
+    padding: 2rem;
+    margin: 1rem;
+    border-radius: 10px;
+}

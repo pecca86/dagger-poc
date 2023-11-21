@@ -1,10 +1,10 @@
 import autogen
 
 class AbstractAgent:
-    def __init__(self, name, system_message, agen_config) -> None:
+    def __init__(self, name, system_message, agent_config) -> None:
         self.name = name
         self.system_message = system_message
-        self.agent_config = agen_config
+        self.agent_config = agent_config
 
         def create_agent(self):
             return autogen.AssistantAgent(

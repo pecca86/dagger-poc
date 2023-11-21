@@ -6,12 +6,15 @@ from social_media_teams.team_image import TeamImage
 from social_media_teams.utils.tweeter import Tweeter
 from analytics_teams.twitter_analytics import TwitterAnalytics
 from configs.app_config import AppConfig
+import logging
 
+logger = logging.getLogger(__name__)
 
 class TeamTwitter:
     def __init__(self, data: str):
         self.data = data
         self.config = AppConfig()
+        logging.info("** PHASE: Twitter Publisher **")
 
     def post_tweet(self, theme, with_image=False) -> None:
         """
@@ -22,7 +25,6 @@ class TeamTwitter:
         twitter_analytics = TwitterAnalytics()
         data = twitter_analytics.twitter_data() #TODO: Rename the method
 
-        # TODO: Create a Analytics agent or not?
         analytics_agent = autogen.AssistantAgent("analytics_agent", llm_config={"config_list": self.config.autogen_config_list}, system_message=f"You are a analyst. You are tasked with drawing conclusion the this set of data that has been loaded with langchain CSVLoader: {data}. You will then provide some insights and focus points to the tweeter based on this.")
         user_proxy = autogen.UserProxyAgent("user_proxy", code_execution_config=False)
         user_proxy.initiate_chat(analytics_agent, message=f"What conclusions can you draw from this twitter data that has been loaded with langchain CSVLoader: {data} and what focus points can you give the creator of the tweets based on this?")
@@ -74,9 +76,17 @@ class TeamTwitter:
             message=f"write a tweet based on the following theme: {theme} that is somehow related to Gin or to the Gin produces Stookers Gin. The output should be text with hashtags at the end. Do not thank each other for the feedback.",
         )
 
+        # Collect logs:
+        msg_dic = manager._oai_messages
+        for k, v in msg_dic.items():
+            logging.info("\n\nFull Conversation: \n")
+            for item in v:
+                logging.info(f"[{item['name']}]: {item['content']}\n")
+            break
+
+        # Get results
         tweet_text = ""
         for v in user_proxy._oai_messages.values():
-            # tweet_text = v[-2]["content"]
             tweet_text = v[-2]["content"]
 
         if with_image:

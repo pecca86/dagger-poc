@@ -8,30 +8,8 @@ import random
 import argparse
 import os
 import shutil
-
-# CLEAN CACHE
-# def clear_history(self, clear_previous_work=False):
-#     """
-#     Clean up the cache directory to avoid conversation spillover between models.
-
-#     Args:
-#         clear_previous_work (bool, optional): Whether to clear the previous work directory. Defaults to True.
-#     """
-#     if os.path.exists('.cache') and os.path.isdir('.cache'):
-#         print('Deleting cache...')
-#         shutil.rmtree('.cache')
-
-#     if clear_previous_work:
-#         self.clear_previous_work()
-
-# Clear previous work / genereated files
-# def clear_previous_work(self):
-#     """
-#     Clean up the previous work directory.
-#     """
-#     if os.path.exists('.coding') and os.path.isdir('.coding'):
-#         print('Deleting previous work...')
-#         shutil.rmtree('.coding')
+import logging
+import datetime
 
 config = AppConfig()
 
@@ -39,6 +17,7 @@ def collect_analytics(platforms: list):
     """
     COLLECT ANALYTICS DATA
     """
+    logging.info("Collecting analytics...")
     if "instagram" in platforms:
         instagram_analytics = InstagramAnalytics()
         instagram_analytics.collect_data()
@@ -51,6 +30,18 @@ def collect_analytics(platforms: list):
 
 
 def main(theme: str, platforms: list, analytics: bool = False, clear_cache:bool = False) -> None:
+
+    # ----------------------------------------
+    #          Init Log
+    # ----------------------------------------
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    logging.basicConfig(filename=f"./logs/log-{timestamp}.log", level=logging.INFO,
+                        format='[%(asctime)s %(levelname)s] %(message)s',
+                        datefmt='%Y-%d-%m %H:%M:%S', encoding="utf-8")
+
+
+
+
 
     if clear_cache:
         if os.path.exists('.cache') and os.path.isdir('.cache'):
@@ -102,6 +93,8 @@ def main(theme: str, platforms: list, analytics: bool = False, clear_cache:bool 
 
     # Collect analytics data
     collect_analytics(['instagram', 'twitter', 'facebook'])
+    logging.info("Program finished.")
+    logging.shutdown()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
