@@ -68,11 +68,17 @@ main {
   border-radius: 10px;
 }
 
+.header-paragraph {
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+    font-weight: 700;
+}
+
 .agent-image {
     /* a small round avatar */
     border-radius: 50%;
     width: 50px;
     height: 50px;
     margin-right: 1rem;
-    
+
 }

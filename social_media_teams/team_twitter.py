@@ -79,7 +79,6 @@ class TeamTwitter:
         # Collect logs:
         msg_dic = manager._oai_messages
         for k, v in msg_dic.items():
-            logging.info("\n\nFull Conversation: \n")
             for item in v:
                 logging.info(f"[{item['name']}]: {item['content']}\n")
             break

@@ -1,7 +1,7 @@
 const reader = new FileReader();
 
-hasMoreText = false;
 randomNumber = 0;
+currentDiv = null;
 
 function watchfileInput(files) {
     if (files.length) {
@@ -28,10 +28,15 @@ function parseContents(file_contents) {
     // split the file_contents into an array of lines
     let lines = file_contents.split("\n");
 
-    // loop through each line
-    for (let i = 0; i < lines.length; i++) {
-        checkLine(lines[i], targetDiv);
+    async function loopWithDelay() {
+        // Assuming 'lines' is your array
+        for (let i = 0; i < lines.length; i++) {
+            checkLine(lines[i], targetDiv);
+            await new Promise(resolve => setTimeout(resolve, 1)); // 500 = Pause for 0.5 seconds
+        }
     }
+
+    loopWithDelay();
 }
 
 
@@ -43,11 +48,10 @@ function checkLine(line, targetDiv) {
 
     // start of a new phase
     if (phaseRegex.test(line)) {
-        this.currentDiv == null;
-        this.randomNumber = null;
         lineParagraph.classList.add("phase");
         lineParagraph.textContent = line;
         targetDiv.appendChild(lineParagraph);
+        lineParagraph.scrollIntoView({ behavior: 'smooth' });
     }
 
     // Start of a new message
@@ -62,11 +66,10 @@ function checkLine(line, targetDiv) {
         // get the agent name, so we can select with image to use
         headerElements = headerText.split(" ");
         agent_name = headerElements[3].replace("[", "").replace("]", "");
-        console.log(agent_name);
         let agentImage = document.createElement("img");
         agentImage.classList.add("agent-image");
         agentImage.src = "static/" + agent_name + ".png";
-        
+
         // add content to the paragraph
         headerParagraph = document.createElement("p");
         headerParagraph.classList.add("header-paragraph");
@@ -88,9 +91,12 @@ function checkLine(line, targetDiv) {
         // add a border to the div
         newDiv.classList.add("message-border");
         targetDiv.appendChild(newDiv);
+        // Scroll to the new paragraph
+        lineParagraph.scrollIntoView({ behavior: 'smooth' });
     }
 
     // Continuation of a message
+    // TODO: Check for code snippet and style that differently
     if (!lineRegex.test(line) && !phaseRegex.test(line) && !systemMessageRegex.test(line)) {
         // check if line has content
         if (line !== "") {
@@ -98,16 +104,7 @@ function checkLine(line, targetDiv) {
             lineParagraph.classList.add("message");
             this.currentDiv.appendChild(lineParagraph);
             targetDiv.appendChild(currentDiv);
-            let i = 0;
-            let speed = 20;
-            // typeWriter();
-            function typeWriter() {
-                if (i < line.length) {
-                    lineParagraph.textContent += line.charAt(i);
-                    i++;
-                    setTimeout(typeWriter, speed);
-                }
-            }
+            lineParagraph.scrollIntoView({ behavior: 'smooth' });
         }
     }
 
@@ -115,6 +112,7 @@ function checkLine(line, targetDiv) {
         lineParagraph.classList.add("system");
         lineParagraph.textContent = line;
         targetDiv.appendChild(lineParagraph);
+        lineParagraph.scrollIntoView({ behavior: 'smooth' });
     }
 
 }
