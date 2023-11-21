@@ -39,7 +39,7 @@ main {
 }
 
 .phase {
-  background-color: yellow;
+  background-color: #ffffb8;
   position: relative;
   border-bottom: 5px solid #6767e4;
   padding: 2rem;
@@ -51,7 +51,7 @@ main {
 }
 
 .system {
-  background-color: lightgreen;
+  background-color: #98e6b2;
   border: 1px solid black;
   border-bottom: 5px solid #6767e4;
   padding: 0.5rem 2.1rem;
