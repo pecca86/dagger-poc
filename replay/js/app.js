@@ -1,7 +1,6 @@
 const reader = new FileReader();
 
 hasMoreText = false;
-currentDiv = null;
 randomNumber = 0;
 
 function watchfileInput(files) {
@@ -44,7 +43,6 @@ function checkLine(line, targetDiv) {
 
     // start of a new phase
     if (phaseRegex.test(line)) {
-        // add a style of yellow background to the paragraph
         this.currentDiv == null;
         this.randomNumber = null;
         lineParagraph.classList.add("phase");
@@ -55,17 +53,37 @@ function checkLine(line, targetDiv) {
     // Start of a new message
     if (lineRegex.test(line)) {
         // we might have more text to add to this message
-        hasMoreText = true;
         this.randomNumber = Math.floor(Math.random() * 10000);
-        // create a new div for the message
+
+        // separate the header from the message [timestamp] [agent name]
+        let headerText = line.match(systemMessageRegex)[0];
+        let cleanedLine = line.replace(headerText + ':', "");
+
+        // get the agent name, so we can select with image to use
+        headerElements = headerText.split(" ");
+        agent_name = headerElements[3].replace("[", "").replace("]", "");
+        console.log(agent_name);
+        let agentImage = document.createElement("img");
+        agentImage.classList.add("agent-image");
+        agentImage.src = "static/" + agent_name + ".png";
+        
+        // add content to the paragraph
+        headerParagraph = document.createElement("p");
+        headerParagraph.classList.add("header-paragraph");
+        headerParagraph.textContent = headerText;
+
+        // add a paragraph for the message which contains of the text without the header
+        lineParagraph.classList.add("message");
+        lineParagraph.textContent = cleanedLine;
+
+        // create a new div for the message and give it a unique class name, then append it to the parent div
         let newDiv = document.createElement("div");
         classNameWithRandomNumber = "message-body-" + randomNumber;
         newDiv.classList.add(classNameWithRandomNumber);
         this.currentDiv = newDiv;
 
-        // add the current line
-        lineParagraph.classList.add("message");
-        lineParagraph.textContent = line;
+        newDiv.appendChild(agentImage);
+        newDiv.appendChild(headerParagraph);
         newDiv.appendChild(lineParagraph);
         // add a border to the div
         newDiv.classList.add("message-border");
