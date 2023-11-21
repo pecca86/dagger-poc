@@ -2,6 +2,7 @@ const reader = new FileReader();
 
 randomNumber = 0;
 currentDiv = null;
+isCode = false;
 
 function watchfileInput(files) {
     if (files.length) {
@@ -28,14 +29,21 @@ function parseContents(file_contents) {
     // split the file_contents into an array of lines
     let lines = file_contents.split("\n");
 
+    // function loopWithDelay() {
+    //     // Assuming 'lines' is your array
+    //     for (let i = 0; i < lines.length; i++) {
+    //         setTimeout(function () {
+    //             checkLine(lines[i], targetDiv);
+    //         }, i * 1); // 1 = Pause for 1 millisecond
+    //     }
+    // }
+
     async function loopWithDelay() {
-        // Assuming 'lines' is your array
         for (let i = 0; i < lines.length; i++) {
             checkLine(lines[i], targetDiv);
-            await new Promise(resolve => setTimeout(resolve, 1)); // 500 = Pause for 0.5 seconds
+            await new Promise(resolve => setTimeout(resolve, 500))// 500 = Pause for 0.5 seconds
         }
     }
-
     loopWithDelay();
 }
 
@@ -100,8 +108,20 @@ function checkLine(line, targetDiv) {
     if (!lineRegex.test(line) && !phaseRegex.test(line) && !systemMessageRegex.test(line)) {
         // check if line has content
         if (line !== "") {
-            lineParagraph.textContent = line;
-            lineParagraph.classList.add("message");
+            if (this.isCode) {
+                lineParagraph.classList.add("code");
+                lineParagraph.textContent = line;
+                if (line.includes("```")) {
+                    this.isCode = false;
+                }
+            } else if (line.includes("```")) {
+                this.isCode = true;
+                lineParagraph.classList.add("code");
+                lineParagraph.textContent = line;
+            } else {
+                lineParagraph.classList.add("message");
+                lineParagraph.textContent = line;
+            }
             this.currentDiv.appendChild(lineParagraph);
             targetDiv.appendChild(currentDiv);
             lineParagraph.scrollIntoView({ behavior: 'smooth' });
@@ -116,4 +136,3 @@ function checkLine(line, targetDiv) {
     }
 
 }
-

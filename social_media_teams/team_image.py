@@ -10,10 +10,7 @@ import time
 from configs.app_config import AppConfig
 from configs.prompt_config import *
 
-
-# TODO: Add logging
 logger = logging.getLogger(__name__)
-
 
 class TeamImage:
     def __init__(self, prompt: str) -> None:

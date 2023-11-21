@@ -90,16 +90,11 @@ function checkLine(line, targetDiv) {
         // check if line is empty
         if (line !== "") {
             lineParagraph.textContent = line;
-            // let newDiv = document.createElement("div");
-            // randomNumber = Math.floor(Math.random() * 10000);
-            // classNameWithRandomNumber = "message-body-" + randomNumber;
-            // newDiv.classList.add(classNameWithRandomNumber);
-            // newDiv.appendChild(lineParagraph);
-            // targetDiv.appendChild(newDiv);
+
             targetDiv.appendChild(lineParagraph);
             let i = 0;
             let speed = 20;
-            // typeWriter();
+            typeWriter();
             function typeWriter() {
                 if (i < line.length) {
                     lineParagraph.textContent += line.charAt(i);
