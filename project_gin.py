@@ -15,7 +15,7 @@ config = AppConfig()
 
 def collect_analytics(platforms: list):
     """
-    COLLECT ANALYTICS DATA
+    Collects analytics data for the given platforms.
     """
     logging.info("Collecting analytics...")
     if "instagram" in platforms:
@@ -39,20 +39,25 @@ def main(theme: str, platforms: list, analytics: bool = False, clear_cache:bool 
                         format='[%(asctime)s %(levelname)s] %(message)s',
                         datefmt='%Y-%d-%m %H:%M:%S', encoding="utf-8")
 
-
-
-
-
+    # ----------------------------------------
+    #          Clear Cache (if flag is set)
+    # ----------------------------------------
     if clear_cache:
         if os.path.exists('.cache') and os.path.isdir('.cache'):
             print('Deleting previous work...')
             shutil.rmtree('.cache')
 
-    # If analytics is True, only collect analytics data
+    # ----------------------------------------
+    #          Collect Analytics only (if flag is set)
+    # ----------------------------------------
     if analytics:
         collect_analytics(platforms)
         return
     
+
+    # ----------------------------------------
+    #          Set Theme (if not set)
+    # ----------------------------------------
     themes = [
         "Gin recepie",
         "Gin fun fact",
@@ -61,11 +66,9 @@ def main(theme: str, platforms: list, analytics: bool = False, clear_cache:bool 
 
     theme = theme if theme is not None else random.choice(themes)
 
-    print("The theme is: ", theme)
-
-    """
-    TWITTER FLOW
-    """
+    # ----------------------------------------
+    #          Twitter Flow
+    # ----------------------------------------
     if "twitter" in platforms:
         print("Twitter flow")
 
@@ -77,11 +80,11 @@ def main(theme: str, platforms: list, analytics: bool = False, clear_cache:bool 
         twitter_team = TeamTwitter(data=research_data)
         twitter_team.post_tweet(
             theme, with_image=config.twitter_with_image
-        )  # TODO: add a way to present a random theme
+        )
 
-    """
-    INSTAGRAM FLOW
-    """
+    # ----------------------------------------
+    #          Instagram Flow
+    # ----------------------------------------
     if "instagram" in platforms:
         print("Instagram flow")
 
@@ -91,12 +94,17 @@ def main(theme: str, platforms: list, analytics: bool = False, clear_cache:bool 
         instagram_team = TeamInstagram(data=research_data)
         instagram_team.publish_content(theme=theme)
 
-    # Collect analytics data
+    # ----------------------------------------
+    #          Collect Analytics Data
+    # ----------------------------------------
     collect_analytics(['instagram', 'twitter', 'facebook'])
     logging.info("Program finished.")
     logging.shutdown()
 
 if __name__ == "__main__":
+    # ----------------------------------------
+    #          Define Program Arguments
+    # ----------------------------------------
     parser = argparse.ArgumentParser(
         description="Team Stookers",
         exit_on_error=True,

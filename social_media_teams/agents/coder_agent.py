@@ -8,6 +8,7 @@ class CoderAgent(AbstractAgent):
             "config_list": agent_config,
             "timeout": 120,
             "temperature": temperature,
+            "frequency_penalty": 0,
         }
 
         AbstractAgent.__init__(self, name, system_message, llm_config)

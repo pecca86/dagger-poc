@@ -17,27 +17,39 @@ class TeamInstagram:
         instagram_analytics = InstagramAnalytics()
         data = instagram_analytics.instagram_data()
 
+        """
+        A N A L Y T I C S
+        """
         # ANALYTICS AGENT
         analytics_agent = autogen.AssistantAgent(
-            instagram_analytics_agent["name"],
-            llm_config={"config_list": self.config.autogen_config_list},
-            system_message=instagram_analytics_agent["prompt"].replace(
-                "{data}", str(data)
-            ),
+            instagram_prompts['analytics_agent']["name"],
+            llm_config={
+                    "config_list": self.config.autogen_config_list,
+                    "temperature": instagram_prompts['analytics_agent']["config"]["temperature"],
+                    "frequency_penalty": instagram_prompts['analytics_agent']["config"]["frequency_penalty"],
+                },
+            # system_message=instagram_analytics_agent["prompt"].replace("{data}", str(data)),
+            system_message=instagram_prompts['analytics_agent']["prompt"].replace("{data}", str(data)),
         )
         user_proxy = autogen.UserProxyAgent(
-            instagram_analytics_user["name"], code_execution_config=False
+            # instagram_analytics_user["name"], code_execution_config=False
+            instagram_prompts['analytics_user']['name'], code_execution_config=False
         )
         user_proxy.initiate_chat(
             analytics_agent,
-            message=instagram_analytics_user["prompt"].replace("{data}", str(data)),
+            # message=instagram_analytics_user["prompt"].replace("{data}", str(data)),
+            message=instagram_prompts['analytics_user']["prompt"].replace("{data}", str(data)),
         )
 
+        """
+        P U B L I S H I N G   C O N T E N T
+        """
         # INSTAGRAM PUBLISHER AGENT
-        publisher_name = instagram_publisher_agent["name"]
+        publisher_name = instagram_prompts['publisher_agent']['name'] #instagram_publisher_agent["name"]
         publisher = InstagramPublisherAgent(
             publisher_name,
-            instagram_publisher_agent["prompt"]
+            # instagram_publisher_agent["prompt"]
+            instagram_prompts['publisher_agent']["prompt"]
             .replace("{instagram_publisher_name}", publisher_name)
             .replace("{theme}", theme),
             self.config.autogen_config_list,
@@ -45,11 +57,11 @@ class TeamInstagram:
         publisher_agent = publisher.retrieve_agent()
 
         # CRITIC AGENT
-        criteria_list = str(instagram_publisher_critic["criteria_list"])
-        critic_name = instagram_publisher_critic["name"]
+        criteria_list = str(instagram_prompts['publisher_critic']["criteria_list"])
+        critic_name = instagram_prompts['publisher_critic']["name"]
         critic = Critic(
             critic_name,
-            instagram_publisher_critic["prompt"]
+            instagram_prompts['publisher_critic']["prompt"]
             .replace("{critic_name}", critic_name)
             .replace("{criteria_list}", criteria_list)
             .replace("{instagram_publisher_name}", publisher_name)
@@ -78,7 +90,7 @@ class TeamInstagram:
         # Start prompt
         user_proxy.initiate_chat(
             manager,
-            message=instagram_publisher_user["prompt"].replace("{theme}", theme),
+            message=instagram_prompts['publisher_user']["prompt"].replace("{theme}", theme),
             # message=f"write an Instagram caption based on the following theme: {theme} that is somehow related to Gin or to the Gin produces Stookers Gin. The output should be text with hashtags at the end. I want the hashtags: #Stookers #Amsterdam to always be present. Do not thank each other for the feedback.",
         )
 
@@ -86,8 +98,14 @@ class TeamInstagram:
         for v in user_proxy._oai_messages.values():
             instagram_caption = v[-2]["content"]
 
+        """
+        I M A G E
+        """
         team_image = TeamImage(instagram_caption)
         filename = team_image.create_image("instagram_images")
 
+        """
+        P U B L I S H
+        """
         publisher = InstagramPublisher()
         publisher.publish(filename, instagram_caption)

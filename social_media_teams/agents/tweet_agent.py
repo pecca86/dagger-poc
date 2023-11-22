@@ -1,4 +1,5 @@
 from agent.abstract_agent import AbstractAgent
+from configs.prompt_config import *
 import sys
 sys.path.append('../../agent')
 
@@ -8,7 +9,8 @@ class TweetAgent(AbstractAgent):
         llm_config = {
             "config_list": agent_config,
             "timeout": 120,
-            "temperature": temperature,
+            "temperature": twitter_prompts['tweet_agent']['config']['temperature'],
+            "frequency_penalty": twitter_prompts['tweet_agent']['config']['frequency_penalty'],
         }
 
         AbstractAgent.__init__(self, name, system_message, llm_config)

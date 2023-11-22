@@ -27,7 +27,7 @@ class TeamImage:
         image_agent_name = "image_agent"
         image_agent = ImageAgent(
             image_agent_name,
-            instagram_image_creator["prompt"].replace("{image_agent_name}", image_agent_name).replace("{prompt}", self.prompt).replace("{banned_words}", "bottle"),
+            instagram_prompts['image_creator']["prompt"].replace("{image_agent_name}", image_agent_name).replace("{prompt}", self.prompt).replace("{banned_words}", "bottle"),
             self.config.autogen_config_list,
         )
         image_agent_agent = image_agent.retrieve_agent()
@@ -60,6 +60,7 @@ class TeamImage:
                 "config_list": self.config.autogen_config_list,
                 "model": "gpt-4",  # make sure the endpoint you use supports the model
                 "temperature": 0,
+                "frequency_penalty": 0,
                 "functions": [
                     {
                         "name": "call_dalle",
@@ -114,7 +115,7 @@ class TeamImage:
 
         user_proxy.initiate_chat(
             manager,
-            message=instagram_image_user["prompt"].replace("{image_agent_name}", image_agent_name),
+            message=instagram_prompts['image_user']["prompt"].replace("{image_agent_name}", image_agent_name),
             code_execution_config=False,
         )
 
