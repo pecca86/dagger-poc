@@ -23,9 +23,9 @@ class TeamTwitter:
         Create three tweets base on the input data and return them as a list
         """
 
-        """
-        A N A L Y T I C S
-        """
+        # ----------------------------------------
+        #          A N A L Y T I C S
+        # ----------------------------------------
         # Get insights from the data
         twitter_analytics = TwitterAnalytics()
         data = str(twitter_analytics.twitter_data())  # TODO: Rename the method
@@ -48,10 +48,10 @@ class TeamTwitter:
             # message=f"What conclusions can you draw from this twitter data that has been loaded with langchain CSVLoader: {data} and what focus points can you give the creator of the tweets based on this?",
             message=twitter_prompts["analytics_user"]["prompt"].replace("{data}", data)
         )
-
-        """
-        C R E A T I N G   T W E E T
-        """
+        
+        # ----------------------------------------
+        #          T W E E T I N G
+        # ----------------------------------------
         # Tweeter
         tweeter_name = twitter_prompts['tweet_agent']['name']
         tweeter = TweetAgent(
@@ -101,7 +101,9 @@ class TeamTwitter:
             message=twitter_prompts['tweet_user']['prompt'].replace("{theme}", theme),
         )
 
-        # Collect logs:
+        # ----------------------------------------
+        #          L O G S
+        # ----------------------------------------
         msg_dic = manager._oai_messages
         for k, v in msg_dic.items():
             for item in v:
@@ -113,15 +115,15 @@ class TeamTwitter:
         for v in user_proxy._oai_messages.values():
             tweet_text = v[-2]["content"]
 
-        """
-        I M A G E
-        """
+        # ----------------------------------------
+        #          I M A G E
+        # ----------------------------------------
         if with_image:
             team_image = TeamImage(tweet_text)
             image_path = team_image.create_image("twitter_images")
 
-        """
-        P O S T I N G
-        """
+        # ----------------------------------------
+        #          P O S T
+        # ----------------------------------------
         tweeter = Tweeter(tweet=tweet_text)  # TODO REMOVE PASSING OF CONFIG
         tweeter.post_tweet()
