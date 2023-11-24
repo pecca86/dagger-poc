@@ -3,7 +3,7 @@ from utils.file_utils import save_to_csv
 from enums.platform import Platform
 import requests
 from configs.app_config import AppConfig
-from langchain.document_loaders.csv_loader import CSVLoader
+# from langchain.document_loaders.csv_loader import CSVLoader
 import shutil
 import os
 
@@ -87,23 +87,23 @@ class InstagramAnalytics:
             "I just looooove this recepie! 20cl of gin, some ice, and a slice of lemon! #gin #ginlovers #ginislife",
         ]
 
-    def instagram_data(self):
-        loader = CSVLoader(
-            file_path="./analytics_data/ig_posts_data.csv",
-            csv_args={
-                "delimiter": "|",
-                "quotechar": '"',
-                "fieldnames": [
-                    "media_id",
-                    "caption",
-                    "comments_count",
-                    "like_count",
-                    "media_product_type",
-                    "media_type",
-                    "timestamp",
-                ],
-            },
-        )
+    # def instagram_data(self):
+    #     loader = CSVLoader(
+    #         file_path="./analytics_data/ig_posts_data.csv",
+    #         csv_args={
+    #             "delimiter": "|",
+    #             "quotechar": '"',
+    #             "fieldnames": [
+    #                 "media_id",
+    #                 "caption",
+    #                 "comments_count",
+    #                 "like_count",
+    #                 "media_product_type",
+    #                 "media_type",
+    #                 "timestamp",
+    #             ],
+    #         },
+    #     )
 
-        data = loader.load()
-        return data
+    #     data = loader.load()
+    #     return data

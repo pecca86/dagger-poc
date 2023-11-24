@@ -19,18 +19,21 @@ def collect_analytics(platforms: list):
     """
     logging.info("Collecting analytics...")
     if "instagram" in platforms:
+        print("Instagram analytics")
+        logging.info("Collecting Instagram data...")
         instagram_analytics = InstagramAnalytics()
         instagram_analytics.collect_data()
     
     if "twitter" in platforms:
+        logging.info("Collecting Twitter data...")
         print("Twitter analytics")
 
     if "facebook" in platforms:
+        logging.info("Collecting Facebook data...")
         print("Facebook analytics")
 
 
 def main(theme: str, platforms: list, analytics: bool = False, clear_cache:bool = False) -> None:
-
     # ----------------------------------------
     #          Init Log
     # ----------------------------------------
@@ -88,6 +91,19 @@ def main(theme: str, platforms: list, analytics: bool = False, clear_cache:bool 
     if "instagram" in platforms:
         print("Instagram flow")
 
+        # We have three different flows: User interaction, product marketing and fun facts
+        if "ff" in platforms:
+            print("Fun fact flow")
+            pass
+
+        if "user" in platforms:
+            print("User flow")
+            pass
+
+        if "content" in platforms:
+            print("Content flow")
+            pass
+
         research_team = ResearchTeam(theme=theme, platform=Platform.INSTAGRAM)
         research_data = research_team.research_results()
 
@@ -113,14 +129,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--clear-cache",
         "-c",
-        type=bool,
+        action="store_true",
         help="Cleare the cache before running the application.",
     )
 
     parser.add_argument(
         "--analytics",
         "-a",
-        type=bool,
+        action="store_true",
         help="Skip content creation and only collect analytics data.",
     )
 
@@ -134,9 +150,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "platforms",
         type=str,
-        nargs="+",
-        choices=["twitter", "instagram", "facebook"],
-        help="Choose the platforms you want to generate content for.",
+        # nargs="+",
+        choices=["twitter", "instagram-user", "instagram-marketing", "instagram-fun", "facebook"],
     )
 
     parser.add_argument(
@@ -144,7 +159,7 @@ if __name__ == "__main__":
         "-p",
         action="store_const",
         const="-p",
-        help="Add all the platforms you want to generate content for.",
+        help="Add all the platforms you want to generate content for separated by a space.",
     )
 
     args = parser.parse_args()

@@ -9,6 +9,7 @@ import shutil
 import time
 from configs.app_config import AppConfig
 from configs.prompt_config import *
+from research_teams.agents.critic import Critic
 
 logger = logging.getLogger(__name__)
 
@@ -27,10 +28,19 @@ class TeamImage:
         image_agent_name = "image_agent"
         image_agent = ImageAgent(
             image_agent_name,
-            instagram_prompts['image_creator']["prompt"].replace("{image_agent_name}", image_agent_name).replace("{prompt}", self.prompt).replace("{banned_words}", "bottle"),
+            instagram_prompts['image_creator']["prompt"].replace("{image_agent_name}", image_agent_name).replace("{prompt}", self.prompt),
             self.config.autogen_config_list,
         )
         image_agent_agent = image_agent.retrieve_agent()
+
+        banned_words = ["bottle"]
+        critic_agent_name = "critic_agent"
+        critic_agent = Critic(
+            critic_agent_name,
+            system_message=f"You are a critic. Your task is to give feedback to the {image_agent_name} based on the following: The prompt should be dall-e-3 friendly and NOT contain any of the words in this list: {str(banned_words)}. Reply TERMINATE when the task is done.",
+            agent_config=self.config.autogen_config_list,
+        )
+        critic_agent_agent = critic_agent.retrieve_agent()
 
         # Dall-e agent
         def call_dalle(prompt) -> str:
@@ -102,7 +112,7 @@ class TeamImage:
         )
 
         group_chat = autogen.GroupChat(
-            agents=[image_agent_agent, function_agent, coder_agent, user_proxy],
+            agents=[image_agent_agent, critic_agent_agent, function_agent, coder_agent, user_proxy],
             messages=[],
             max_round=10,
         )

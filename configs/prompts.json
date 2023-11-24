@@ -52,7 +52,7 @@
                 {
                     "role": "instagram_user",
                     "name": "user_proxy",
-                    "prompt": "write an Instagram caption based on the following theme: {theme} that is somehow related to Gin or to the Gin produces Stookers Gin. The output should be text with hashtags at the end. I want the hashtags: #Stookers #Amsterdam to always be present. Do not thank each other for the feedback."
+                    "prompt": "Create an Instagram caption based on the input data and the following theme: {theme} that is somehow related to Gin or to the Gin produces Stookers Gin. The output should be text with hashtags at the end. I want the hashtags: #Stookers #Amsterdam to always be present. Do not thank each other for the feedback."
                 },
                 {
                     "role": "instagram_publisher",
@@ -95,7 +95,7 @@
                 {
                     "role": "image creator",
                     "name": "image_agent",
-                    "prompt": "You are the {image_agent_name}. You will create a prompt based on this text: {prompt}. The prompts should be short and descriptive, so that it can be used in dall-e 3 for creating a prompt based image. I do the prompt to contain the following words: {banned_words}.",
+                    "prompt": "You are the {image_agent_name}. You will create a prompt based on this text: {prompt}. The prompts should be short and descriptive, so that it can be used in dall-e 3 for creating a prompt based image.",
                     "config": {
                         "temperature": 0.5,
                         "frequency_penalty": 0.3

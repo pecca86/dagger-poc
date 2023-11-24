@@ -1,5 +1,5 @@
 import autogen
-from langchain.document_loaders.csv_loader import CSVLoader
+# from langchain.document_loaders.csv_loader import CSVLoader
 
 
 class TwitterAnalytics:

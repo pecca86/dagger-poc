@@ -4,10 +4,10 @@ import autogen
 class AppConfig:
     def __init__(self):
         # Config for autogen
-        self.autogen_model = config("AUTOGEN_MODEL")
+        self.openai_model = config("OPENAI_MODEL")
         self.autogen_config_list = [
             {
-                "model": config("AUTOGEN_MODEL"),
+                "model": config("OPENAI_MODEL"),
                 "api_key": config("OPENAI_API_KEY"),
             }
         ]
