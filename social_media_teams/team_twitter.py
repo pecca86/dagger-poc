@@ -19,35 +19,12 @@ class TeamTwitter:
     def __init__(self, data: str):
         self.data = data
         self.config = AppConfig()
-        logging.info("** PHASE: Twitter Publisher **")
+        logging.info("** PHASE: Twitter Team **")
 
     def post_tweet(self, theme, with_image=False) -> None:
         """
         Create three tweets base on the input data and return them as a list
         """
-
-        # ----------------------------------------
-        #          A N A L Y T I C S
-        # ----------------------------------------
-        # Get insights from the data
-        # twitter_analytics = TwitterAnalytics()
-        # data = str(twitter_analytics.twitter_data())  # TODO: Rename the method
-
-        # analytics_agent = autogen.AssistantAgent(
-        #     twitter_prompts["analytics_agent"]["name"],
-        #     llm_config={
-        #         "config_list": self.config.autogen_config_list,
-        #         "temperature": twitter_prompts["analytics_agent"]["config"]["temperature"],
-        #         "frequency_penalty": twitter_prompts["analytics_agent"]["config"]["frequency_penalty"],
-        #     },
-        #     system_message=twitter_prompts["analytics_agent"]["prompt"].replace("{data}", data)
-        # )
-
-        # user_proxy = autogen.UserProxyAgent(twitter_prompts['analytics_user']['name'], code_execution_config=False)
-        # user_proxy.initiate_chat(
-        #     analytics_agent,
-        #     message=twitter_prompts["analytics_user"]["prompt"].replace("{data}", data)
-        # )
 
         # ----------------------------------------
         #          T W E E T I N G  W I T H  A N A L Y T I C S

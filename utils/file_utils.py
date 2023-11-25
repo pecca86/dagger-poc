@@ -34,7 +34,9 @@ def move_file_and_add_time_stamp(
                     f"{file_name_without_extension}_{timestamp}{file_extension}",
                 )
                 shutil.move(source_file_path, destination_file_path)
-                unique_filename = f"{file_name_without_extension}_{timestamp}{file_extension}"
+                unique_filename = (
+                    f"{file_name_without_extension}_{timestamp}{file_extension}"
+                )
                 print(f"Moved {target_file_name} to {destination_file_path}")
                 break
         else:
@@ -92,6 +94,14 @@ def save_to_csv(file_name: str, headers: list, data: list, platform: Platform):
         logger.error(f"Error: Could not save to csv file. {e}")
 
 
+def save_to_text_file(file_path: str, text: str, overwrite_if_exist: bool = False):
+    """
+    Save data to a text file
+    """
+    with open(file_path, "w" if overwrite_if_exist else "a", encoding="utf-8") as file:
+        file.write(text)
+
+
 def convert_file_type(original_file_path: str, target_type: str) -> str:
     """
     Tries to convert input file to target type.
@@ -108,3 +118,27 @@ def convert_file_type(original_file_path: str, target_type: str) -> str:
 
     except (FileNotFoundError, IOError, SyntaxError, ValueError) as e:
         logger.error(f"Error: Could not convert file: {e}")
+
+
+def read_file_content(file_path: str) -> str:
+    """
+    Reads the content of a file and returns it as a string
+    """
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            content = file.readline()
+            return content
+    except (FileNotFoundError, IOError) as e:
+        logger.error(f"Error: Could not read file: {e}")
+
+
+def read_first_line(file_path: str) -> str:
+    """
+    Reads the first line of a text file and returns it as a string.
+    """
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            first_line = file.readline()
+            return first_line.strip()
+    except (FileNotFoundError, IOError) as e:
+        logger.error(f"Error: Could not read file: {e}")

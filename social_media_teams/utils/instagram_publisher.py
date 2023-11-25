@@ -6,6 +6,9 @@ import subprocess
 import time
 import json
 import re
+import logging
+
+logger = logging.getLogger(__name__)
 
 from configs.app_config import AppConfig
 
@@ -42,7 +45,6 @@ class InstagramPublisher:
 
         # Now you can use the public URL to access your local images
         image_url = f"{public_url}/instagram_images/{filename}"
-        print(image_url)
 
         access_token = self.config.instagram_long_term_access_token
 
@@ -50,13 +52,15 @@ class InstagramPublisher:
         media_container_id = self.create_media_container(
             access_token, image_url, cleaned_caption
         )
-        self.publish_photo(access_token, media_container_id)
+        response = self.publish_photo(access_token, media_container_id)
 
         print("Saved data: ", self.saved_data)
-
+        logging.info("Saved data: ", self.saved_data)
         # Remember to stop ngrok and the HTTP server when you're done
         ngrok.terminate()
         httpd.shutdown()
+
+        return response
 
     def create_media_container(self, access_token, image_url, cleaned_caption):
         url = (
@@ -70,7 +74,6 @@ class InstagramPublisher:
         response = requests.post(url, params=payload)
         data = response.json()
         self.saved_data.append(data)
-        print(data)
         return data["id"]
 
     def publish_photo(self, access_token, creation_id):
@@ -79,4 +82,4 @@ class InstagramPublisher:
         response = requests.post(url, params=payload)
         data = response.json()
         self.saved_data.append(data)
-        print(data)
+        return data

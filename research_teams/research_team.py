@@ -13,12 +13,16 @@ logger = logging.getLogger(__name__)
 
 
 class ResearchTeam:
-    def __init__(self, theme: str, platform: Platform):
+    def __init__(self, theme: str = None, platform: Platform = None):
         self.platform = platform
         self.theme = theme
         self.config = AppConfig()
-        self.prompts = instagram_prompts if self.platform == Platform.INSTAGRAM else twitter_prompts # TODO: needs to be changed if more platforms are introduced
-        logging.info("** PHASE: Twitter Research **")
+        self.prompts = (
+            instagram_prompts
+            if self.platform == Platform.INSTAGRAM
+            else twitter_prompts
+        )  # TODO: needs to be changed if more platforms are introduced
+        logging.info(f"** PHASE: {platform} Research **")
 
     def research_results(self) -> str:
         scraper = Scraper(self.theme)
@@ -33,7 +37,7 @@ class ResearchTeam:
         researcher = Researcher(
             researcher_name,
             # instagram_research_agent["prompt"]
-            self.prompts['research_agent']['prompt']
+            self.prompts["research_agent"]["prompt"]
             .replace("{researcher_name}", researcher_name)
             .replace("{theme}", self.theme),
             self.config.autogen_config_list,
@@ -41,12 +45,12 @@ class ResearchTeam:
         researcher_agent = researcher.retrieve_agent()
 
         # Create the Critic Agent
-        criteria_list = str(self.prompts['research_critic']["criteria_list"])
-        critic_name = self.prompts['research_critic']["name"]
+        criteria_list = str(self.prompts["research_critic"]["criteria_list"])
+        critic_name = self.prompts["research_critic"]["name"]
         critic = Critic(
             critic_name,
             # instagram_research_critic["prompt"]
-            self.prompts['research_critic']['prompt']
+            self.prompts["research_critic"]["prompt"]
             .replace("{critic_name}", critic_name)
             .replace("{criteria_list}", criteria_list),
             self.config.autogen_config_list,
@@ -76,7 +80,9 @@ class ResearchTeam:
         user_proxy.initiate_chat(
             manager,
             # message=instagram_research_user["prompt"].replace("{theme}", self.theme),
-            message=self.prompts['research_user']['prompt'].replace("{theme}", self.theme),
+            message=self.prompts["research_user"]["prompt"].replace(
+                "{theme}", self.theme
+            ),
         )
 
         # Collect logs:

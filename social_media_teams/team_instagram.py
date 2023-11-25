@@ -3,12 +3,17 @@ from analytics_teams.instagram_analytics import InstagramAnalytics
 from social_media_teams.agents.instagram_publisher_agent import InstagramPublisherAgent
 from research_teams.agents.critic import Critic
 from social_media_teams.team_image import TeamImage
+from social_media_teams.agents.ingredient_agent import IngredientAgent
 from social_media_teams.utils.instagram_publisher import InstagramPublisher
+from data_collection_teams.instagram_api_team.instagram_api_team import InstagramApiTeam
 from configs.prompt_config import *
+from utils import file_utils
 from autogen.agentchat.contrib.retrieve_user_proxy_agent import RetrieveUserProxyAgent
 import autogen
 import logging
 from chromadb.utils import embedding_functions
+import re
+import random
 
 logger = logging.getLogger(__name__)
 
@@ -18,42 +23,182 @@ class TeamInstagram:
         self.data = data
         self.config = AppConfig()
 
-    def publish_content(self, theme) -> None:
-        # instagram_analytics = InstagramAnalytics()
-        # data = instagram_analytics.instagram_data()
+    def publish_user_content(self):
+        logging.info("** PHASE: Instagram Team - User engagement **")
+        # 1. Get post id from txt file
+        media_id = file_utils.read_first_line("./analytics_data/ig_user_content.txt")
+        # 2. Get comments from post
+        instagram_api = InstagramApiTeam()
+        comments = instagram_api.all_comments_from_media(media_id)
 
-        # ----------------------------------------
-        #          A N A L Y T I C S
-        # ----------------------------------------
-        # ANALYTICS AGENT
-        # analytics_agent = autogen.AssistantAgent(
-        #     instagram_prompts["analytics_agent"]["name"],
-        #     llm_config={
-        #         "config_list": self.config.autogen_config_list,
-        #         "temperature": instagram_prompts["analytics_agent"]["config"][
-        #             "temperature"
-        #         ],
-        #         "frequency_penalty": instagram_prompts["analytics_agent"]["config"][
-        #             "frequency_penalty"
-        #         ],
-        #     },
-        #     system_message=instagram_prompts["analytics_agent"]["prompt"].replace(
-        #         "{data}", str(data)
-        #     ),
-        # )
-        # # User proxy
-        # user_proxy = autogen.UserProxyAgent(
-        #     instagram_prompts["analytics_user"]["name"], code_execution_config=False
-        # )
+        # 3. Select one comment, determine if right format 'a and b' or 'a & b'
+        valid_comment = None
+        username = None
+        for comment in comments:
+            if re.search(r"\b(\w+)\s+(and|&)\s+(\w+)\b", comment["text"]):
+                valid_comment = comment
+                break
+        if valid_comment is not None:
+            idxs = re.search(r"\b(\w+)\s+(and|&)\s+(\w+)\b", valid_comment["text"])
+            ingredients = valid_comment["text"][idxs.start() : idxs.end()]
+            username = instagram_api.comment_info(valid_comment["id"])["from"]["username"]
+            instagram_api.reply_to_comment(valid_comment["id"], f"Congrats @{username}! Your recipe will was picked and your ingredients will be featured in the next post, stay tuned!")
+        else:
+            ingredients = "default"
 
-        # # Start prompt
-        # user_proxy.initiate_chat(
-        #     analytics_agent,
-        #     message=instagram_prompts["analytics_user"]["prompt"].replace(
-        #         "{data}", str(data)
-        #     ),
-        # )
+        # 4. Create a post with that incorporates the comment
+        caption = self._create_caption(username, ingredients)
 
+        # 5. Create image
+        # For each recipe, make a unique picture in an art-style of your choice of the cocktail on a background. Show the cocktail in a wide
+        # shot (image dimensions must be 1:1) with dramatic lighting from the left side. Never show bottles in the image.
+        team_image = TeamImage(caption)
+        filename = team_image.create_image("instagram_images")
+
+        # 6. Publish the post, with the text: 'This week's ingredients were from @username, if you want to create your own recipe, please blow in the form of 'a and b' or 'a & b. Recipe'
+        logging.info("Publishing post...")
+        instagram_publisher = InstagramPublisher()
+        response = instagram_publisher.publish(filename, caption)
+
+        # 7. Save the post ID to a file so we can use this id next time in this flow
+        logging.info("Published successfully! Saving post id...")
+        file_utils.save_to_text_file("./analytics_data/ig_user_content.txt", response["id"], True)
+
+
+    def _create_caption(self, username, ingredients: str) -> str:
+        #TODO - Put into prompt_config
+        ingredient_agent_prompt = """
+        The GPT is designed to be a Gin cocktail recipe machine. It will create cocktail recipes based on the flavours that the user will share. 
+        It will emphasise accuracy in recipes and clarity in instructions, ensuring users have a seamless experience in crafting their drinks. 
+        The GPT should avoid giving health or dietary advice and should not encourage excessive drinking. Its tone will be friendly and engaging, 
+        making the process of cocktail making enjoyable and easy to follow. The recipes have the following format: An engaging name in this format: <cocktail name> 
+        for <instagram name>, 10 - 20 word introduction about the cocktail and mentions the name of the user who suggested the flavours, 
+        a bullet list of the ingredients needed (use the metric system), a numbered step by step description of the making the cocktail. 
+        Always say Stookers gin wherever you are talking about Gin. You will end each recipe with Cheers in a random language.  
+        Always add this copy at the end of the recipe: This recipe is generated by AI, we can't guarantee that it is tasty or not harmful. 
+        Try it at your own risk. Below this copy I want you to always add: You want your own unique Stookers cocktail?
+        Comment your two favorite flavours and we might create one just for you.
+        """
+        ingredient_agent_name = "ingredient_agent"
+        ingredient_agent = IngredientAgent(
+            name=ingredient_agent_name,
+            system_message=ingredient_agent_prompt,
+            agent_config=self.config.autogen_config_list,
+        )
+        ingredient_agent_agent = ingredient_agent.retrieve_agent()
+        ingredient_user = autogen.UserProxyAgent(
+            name="ingredient_user",
+            human_input_mode="NEVER",
+            max_consecutive_auto_reply=0,
+            code_execution_config=False,
+        )
+
+        if ingredients != "default":
+            ingredient_user.initiate_chat(
+                ingredient_agent_agent,
+                message=f"This week's ingredients were from @{username}, with the ingredients: '{ingredients}'.",
+            )
+
+        else:
+            # TODO - Put into prompt_config
+            random_ingredients = [
+                "peppermint",
+                "grapes",
+                "orange",
+                "lemon",
+                "lime",
+                "ginger",
+                "strawberry",
+                "watermelon",
+                "apple",
+                "pear",
+                "pineapple",
+                "raspberry",
+                "blueberry",
+                "blackberry",
+                "cherry",
+                "peach",
+                "apricot",
+                "plum",
+                "mango",
+                "papaya",
+                "banana",
+                "coconut",
+                "kiwi",
+                "passion fruit",
+                "pomegranate",
+                "lychee",
+                "guava",
+                "fig",
+                "date",
+                "grapefruit",
+                "tangerine",
+                "clementine",
+                "mandarin",
+                "nectarine",
+                "blood orange",
+                "cantaloupe",
+                "honeydew",
+                "dragon fruit",
+                "star fruit",
+                "persimmon",
+                "jackfruit",
+                "durian",
+                "breadfruit",
+                "quince",
+                "kumquat",
+                "gooseberry",
+                "cranberry",
+                "currant",
+                "elderberry",
+                "boysenberry",
+                "loganberry",
+                "mulberry",
+                "blackcurrant",
+                "redcurrant",
+                "whitecurrant",
+                "goji berry",
+                "cloudberry",
+                "salmonberry",
+                "lingonberry",
+                "barberry",
+                "cherimoya",
+                "custard apple",
+                "soursop",
+                "sugar apple",
+                "cherimoya",
+                "custard apple",
+                "soursop",
+            ]
+            random_ingredient_1 = random.choice(random_ingredients)
+            random_ingredient_2 = random.choice(random_ingredients)
+            ingredient_user.initiate_chat(
+                ingredient_agent_agent,
+                message=f"This week's ingredients were selected randomly, with the ingredients: '{random_ingredient_1} and {random_ingredient_2}'. Please do not mention the instagram_name!",
+            )
+
+        for v in ingredient_agent_agent._oai_messages.values():
+            agent_caption = v[-1]["content"]
+            print("AGENT CAPTION: ", agent_caption)
+
+        # CHAT LOGS
+        msg_dic = ingredient_agent_agent._oai_messages
+        for k, v in msg_dic.items():
+            for item in v:
+                print(f"[{item['role']}]: {item['content']}\n")
+                logging.info(f"[{item['role']}]: {item['content']}\n")
+            break
+
+        return agent_caption
+
+
+    def publishing_marketing_content(self, theme) -> None:
+        logging.info("** PHASE: Instagram Team - Marketing **")
+        pass
+
+
+    def publish_fun_content(self, theme) -> None:
+        logging.info("** PHASE: Instagram Team - Fun fact **")
         # ----------------------------------------
         #          C R E A T E  C O N T E N T  W I T H  A N A L Y T I C S
         # ----------------------------------------
@@ -62,7 +207,10 @@ class TeamInstagram:
         analytics_agent = autogen.AssistantAgent(
             name="analyst",
             system_message="You are a data analyst specialized in analyzing trends in instagram data, given to you by the raqproxy agent. You will reiterate according to feedback given by the critic.",
-            llm_config=self.config.autogen_config_list,
+            llm_config= {
+                "config_list": self.config.autogen_config_list,
+                "temperature": 0,
+            }
         )
 
         # RAG USER PROXY AGENT
@@ -111,8 +259,7 @@ class TeamInstagram:
 
         # User
         user_proxy = autogen.UserProxyAgent(
-            name="user_proxy", 
-            code_execution_config=False
+            name="user_proxy", code_execution_config=False
         )
 
         group_chat = autogen.GroupChat(

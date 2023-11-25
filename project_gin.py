@@ -4,6 +4,7 @@ from social_media_teams.team_twitter import TeamTwitter
 from social_media_teams.team_instagram import TeamInstagram
 from analytics_teams.instagram_analytics import InstagramAnalytics
 from configs.app_config import AppConfig
+from data_collection_teams.instagram_api_team.instagram_api_team import InstagramApiTeam
 import random
 import argparse
 import os
@@ -19,10 +20,10 @@ def collect_analytics(platforms: list):
     """
     logging.info("Collecting analytics...")
     if "instagram" in platforms:
-        print("Instagram analytics")
+        print("Collecting Instagram data...")
         logging.info("Collecting Instagram data...")
-        instagram_analytics = InstagramAnalytics()
-        instagram_analytics.collect_data()
+        instagram = InstagramApiTeam()
+        instagram.collect_data()
     
     if "twitter" in platforms:
         logging.info("Collecting Twitter data...")
@@ -91,29 +92,39 @@ def main(theme: str, platforms: list, analytics: bool = False, clear_cache:bool 
     if "instagram" in platforms:
         print("Instagram flow")
 
-        # We have three different flows: User interaction, product marketing and fun facts
-        if "ff" in platforms:
+        # Fun fact about gin
+        if "fun" in platforms:
             print("Fun fact flow")
-            pass
+            research_team = ResearchTeam(theme=theme, platform=Platform.INSTAGRAM)
+            research_data = research_team.research_results()
 
+            instagram_team = TeamInstagram(data=research_data)
+            instagram_team.publish_fun_content(theme=theme)
+
+        # Publish content where we encourage user interaction (e.g. give two ingredients to a recipe)
         if "user" in platforms:
             print("User flow")
-            pass
+            """
+            1. Get the post id from the latest user post
+            2. Get the comments from the post
+            3. Select one comment -> determine if right fromat 'a and b' or 'a & b'
+            4. Create a post with that incorporates the comment
+            5. Publish the post, with the text: 'This week's ingredients were from @username, if you want to create your own recipe, please blow in the form of 'a and b' or 'a & b. Recipe'
+            6. Save the post ID to a file so we can use this id next time in this flow
+            """
+            instagram_team = TeamInstagram(data=None)
+            instagram_team.publish_user_content()
 
-        if "content" in platforms:
-            print("Content flow")
-            pass
+        # Stookers marketing and product information with a real image
+        if "marketing" in platforms:
+            print("Marketing flow")
+            instagram_team = TeamInstagram(data=research_data)
+            instagram_team.publish_fun_content(theme=theme)
 
-        research_team = ResearchTeam(theme=theme, platform=Platform.INSTAGRAM)
-        research_data = research_team.research_results()
-
-        instagram_team = TeamInstagram(data=research_data)
-        instagram_team.publish_content(theme=theme)
 
     # ----------------------------------------
-    #          Collect Analytics Data
+    #          Shut Down Log
     # ----------------------------------------
-    collect_analytics(['instagram', 'twitter', 'facebook'])
     logging.info("Program finished.")
     logging.shutdown()
 
