@@ -142,3 +142,4 @@ def read_first_line(file_path: str) -> str:
             return first_line.strip()
     except (FileNotFoundError, IOError) as e:
         logger.error(f"Error: Could not read file: {e}")
+

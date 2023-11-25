@@ -226,7 +226,7 @@ class TeamInstagram:
             human_input_mode="NEVER",
             retrieve_config={
                 "task": "qa",
-                "docs_path": "./analytics_data/ig_posts_data.csv",
+                "docs_path": "./analytics_data/ig_top_10_data.csv",
                 "embedding_function": openai_ef,
             },
         )

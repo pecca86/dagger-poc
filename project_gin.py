@@ -162,7 +162,7 @@ if __name__ == "__main__":
         "platforms",
         type=str,
         # nargs="+",
-        choices=["twitter", "instagram-user", "instagram-marketing", "instagram-fun", "facebook"],
+        choices=["twitter", "instagram-analytics", "instagram-user", "instagram-marketing", "instagram-fun", "facebook"],
     )
 
     parser.add_argument(

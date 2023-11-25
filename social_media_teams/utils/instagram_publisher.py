@@ -54,7 +54,6 @@ class InstagramPublisher:
         )
         response = self.publish_photo(access_token, media_container_id)
 
-        print("Saved data: ", self.saved_data)
         logging.info("Saved data: ", self.saved_data)
         # Remember to stop ngrok and the HTTP server when you're done
         ngrok.terminate()
