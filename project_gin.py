@@ -90,11 +90,11 @@ def main(theme: str, platforms: list, analytics: bool = False, clear_cache:bool 
     #          Instagram Flow
     # ----------------------------------------
     if "instagram" in platforms:
-        print("Instagram flow")
+        logging.info("Instagram flow")
 
         # Fun fact about gin
         if "fun" in platforms:
-            print("Fun fact flow")
+            logging.info("Fun fact flow")
             research_team = ResearchTeam(theme=theme, platform=Platform.INSTAGRAM)
             research_data = research_team.research_results()
 
@@ -103,23 +103,15 @@ def main(theme: str, platforms: list, analytics: bool = False, clear_cache:bool 
 
         # Publish content where we encourage user interaction (e.g. give two ingredients to a recipe)
         if "user" in platforms:
-            print("User flow")
-            """
-            1. Get the post id from the latest user post
-            2. Get the comments from the post
-            3. Select one comment -> determine if right fromat 'a and b' or 'a & b'
-            4. Create a post with that incorporates the comment
-            5. Publish the post, with the text: 'This week's ingredients were from @username, if you want to create your own recipe, please blow in the form of 'a and b' or 'a & b. Recipe'
-            6. Save the post ID to a file so we can use this id next time in this flow
-            """
+            logging.info("User flow")
             instagram_team = TeamInstagram(data=None)
             instagram_team.publish_user_content()
 
         # Stookers marketing and product information with a real image
         if "marketing" in platforms:
-            print("Marketing flow")
-            instagram_team = TeamInstagram(data=research_data)
-            instagram_team.publish_fun_content(theme=theme)
+            logging.info("Marketing flow")
+            instagram_team = TeamInstagram(data=None)
+            instagram_team.publish_marketing_content(theme=theme)
 
 
     # ----------------------------------------

@@ -14,17 +14,30 @@ from configs.app_config import AppConfig
 
 app_config = AppConfig()
 
+
 class InstagramPublisher:
-    saved_data = []
     def __init__(self) -> None:
         self.config = AppConfig()
 
-    def publish(self, filename: str, caption: str) -> None:
+    def publish_with_url(self, image_url: str, caption: str) -> str:
+        cleaned_caption = re.sub('^"|"$', "", caption)
+        media_container_id = self.create_media_container(
+            self.config.instagram_long_term_access_token, image_url, cleaned_caption
+        )
+        response = self.publish_photo(
+            self.config.instagram_long_term_access_token, media_container_id
+        )
+
+        return response
+
+    def publish(self, filename: str, caption: str) -> str:
         """
         Publish an image to instagram
         """
 
-        cleaned_caption = re.sub('^"|"$', '', caption) #cleans the double quotes from the tweet
+        cleaned_caption = re.sub(
+            '^"|"$', "", caption
+        )  # cleans the double quotes from the tweet
 
         # # Start a simple HTTP server in a new thread
         PORT = 8000
@@ -54,7 +67,6 @@ class InstagramPublisher:
         )
         response = self.publish_photo(access_token, media_container_id)
 
-        logging.info("Saved data: ", self.saved_data)
         # Remember to stop ngrok and the HTTP server when you're done
         ngrok.terminate()
         httpd.shutdown()
@@ -72,7 +84,6 @@ class InstagramPublisher:
         }
         response = requests.post(url, params=payload)
         data = response.json()
-        self.saved_data.append(data)
         return data["id"]
 
     def publish_photo(self, access_token, creation_id):
@@ -80,5 +91,4 @@ class InstagramPublisher:
         payload = {"creation_id": creation_id, "access_token": access_token}
         response = requests.post(url, params=payload)
         data = response.json()
-        self.saved_data.append(data)
         return data
