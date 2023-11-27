@@ -56,7 +56,7 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script: |
             sudo su
-            docker stop stookers || true
-            docker rm stookers || true
-            docker pull ${{secrets.DOCKER_HUB_USERNAME}}/pecca86:latest
-            docker run --name stookers -it --rm ${{secrets.DOCKER_HUB_USERNAME}}/poc:latest
+            sudo docker stop stookers || true
+            sudo docker rm stookers || true
+            sudo docker pull ${{secrets.DOCKER_HUB_USERNAME}}/pecca86:latest
+            sudo docker run --name stookers -it --rm ${{secrets.DOCKER_HUB_USERNAME}}/poc:latest
