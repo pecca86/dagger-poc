@@ -39,7 +39,6 @@ async def main():
                         "TWITTER_BEARER_TOKEN": os.environ.get("TWITTER_BEARER_TOKEN"),
                         "TWITTER_OAUTH2_CLIENT_ID": os.environ.get("TWITTER_OAUTH2_CLIENT_ID"),
                         "TWITTER_OAUTH2_CLIENT_SECRET": os.environ.get("TWITTER_OAUTH2_CLIENT_SECRET"),
-                        "TWITTER_WITH_IMAGE": os.environ.get("TWITTER_WITH_IMAGE"),
                         "INSTAGRAM_LONG_TERM_ACCESS_TOKEN": os.environ.get("INSTAGRAM_LONG_TERM_ACCESS_TOKEN"),
                         "META_INSTAGRAM_APP_ID": os.environ.get("META_INSTAGRAM_APP_ID"),
                         "AUTOGEN_MODEL": os.environ.get("AUTOGEN_MODEL"),
