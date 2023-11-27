@@ -21,16 +21,11 @@ async def main():
         # create container
         source = (
             client.container()
-            # .from_("python:3.11.0-slim-buster")
-            # .from_("ubuntu:latest")
-            # .from_("amd64/alpine")
-            # .from_("arm64v8/ubuntu:latest")
             .from_("amd64/ubuntu")
             .with_directory(
                 "/app", client.host().directory("."), exclude=["ci/", "configs/.env"]
             )
             .with_workdir("/app")
-            # .with_exec(["/bin/sh", "setup.sh"])
             .with_exec(["/bin/bash", "setup.sh"])
             .with_mounted_cache("./py_cache", python_cache)
             .with_(
