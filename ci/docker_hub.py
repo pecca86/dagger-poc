@@ -46,9 +46,9 @@ async def main():
                 )
             )
             .with_exec(["env"])
-            .with_entrypoint(
-                ["python3", "project_gin.py", "-p", "twitter", "instagram", "-a" "True"]
-            )
+            # .with_entrypoint(
+            #     ["python3", "project_gin.py", "-p", "twitter", "instagram", "-a" "True"]
+            # )
         )
 
         # use secret for registry authentication
