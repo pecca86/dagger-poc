@@ -8,8 +8,7 @@ jobs:
   dagger:
     name: dagger
     runs-on: ubuntu-latest
-    env: 
-      DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+    env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
       TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
@@ -18,7 +17,6 @@ jobs:
       TWITTER_BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
       TWITTER_OAUTH2_CLIENT_ID: ${{ secrets.TWITTER_OAUTH2_CLIENT_ID }}
       TWITTER_OAUTH2_CLIENT_SECRET: ${{ secrets.TWITTER_OAUTH2_CLIENT_SECRET }}
-      TWITTER_WITH_IMAGE: ${{ vars.TWITTER_WITH_IMAGE }}
       INSTAGRAM_LONG_TERM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_LONG_TERM_ACCESS_TOKEN }}
       META_INSTAGRAM_APP_ID: ${{ secrets.META_INSTAGRAM_APP_ID }}
       AUTOGEN_MODEL: ${{ vars.AUTOGEN_MODEL }}
@@ -38,3 +36,21 @@ jobs:
         run: pip install dagger-io
       - name: Run dagger
         run: python3 ci/docker_hub.py
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: Deploy to EC2 Instance
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            docker stop stookers || true
+            docker rm stookers || true
+            docker pull ${{secrets.DOCKER_HUB_USERNAME}}/pecca86:latest
+            docker run --name stookers -it --rm ${{secrets.DOCKER_HUB_USERNAME}}/poc:latest
