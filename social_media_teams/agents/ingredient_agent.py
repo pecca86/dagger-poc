@@ -9,8 +9,8 @@ class IngredientAgent(AbstractAgent):
         llm_config = {
             "config_list": agent_config,
             "timeout": 120,
-            "temperature": 0.4,
-            "frequency_penalty": 0.2
+            "temperature": instagram_prompts['ingredient_agent']['config']['temperature'],
+            "frequency_penalty": instagram_prompts['ingredient_agent']['config']['frequency_penalty'],
         }
 
         AbstractAgent.__init__(self, name, system_message, llm_config)

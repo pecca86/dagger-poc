@@ -1,7 +1,6 @@
 from requests_oauthlib import OAuth1Session
 import os
 import json
-from decouple import config
 from utils.file_utils import save_to_csv
 import time
 import re

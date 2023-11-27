@@ -53,7 +53,6 @@ async def main():
             )
             .with_exec(["env"])
             .with_entrypoint(
-                # ["python3", "project_gin.py", "-t", "theme", "-p", "twitter"]
                 ["python3", "project_gin.py", "-p", "twitter", "instagram", "-a" "True"]
             )
         )

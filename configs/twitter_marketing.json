@@ -1,0 +1,14 @@
+{
+    "marketing_agent": {
+        "name": "marketing_agent",
+        "prompt": "You are the marketing agent. You will create a short text for an tweet containing a prodcut from Stooker's Gin. You can use information from thier homepage: https://stookers.nl/pages/over-stookers-en-amsterdamse-biologische-gin. The text should ONLY include the promotional caption and nothing else.",
+        "config": {
+            "temperature": 0.3,
+            "frequency_penalty": 0.3
+        }
+    },
+    "marketing_user": {
+        "name": "marketing_user",
+        "prompt": "Create a promotional post for Stooker's Gin. The target platform is Instagram. Their homepage is https://stookers.nl/. The post should be short and engaging."
+    }
+}

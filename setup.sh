@@ -7,6 +7,10 @@ pip install --upgrade pip
 # Install curl
 apt install curl -y
 apt install python3-pycurl -y
+# Install Ruby
+apt install ruby-full -y
+# Install twurl
+gem install twurl
 # Install Rust compiler
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -y | sh
 # Install Ngrok

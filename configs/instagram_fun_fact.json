@@ -1,0 +1,107 @@
+{
+    "instagram_fun_fact": {
+        "research": {
+            "roles": [
+                {
+                    "role": "user",
+                    "name": "user_proxy",
+                    "prompt": "Distil the input information related to the theme: {theme} into four elements: 1. insights 2.fun facts 3.recepies 4. something related to Stookers gin. Do not thank each other for the feedback."
+                },
+                {
+                    "role": "researcher",
+                    "name": "researcher_agent",
+                    "prompt": "You are the {researcher_name}. You will be given raw information with the theme of: {theme}. You will then use the information you find to write a short summary of the topic. After each iteration you will wait for the reviewer's feedback on the content. The information will be provided by a web scraper.",
+                    "config": {
+                        "temperature": 0.1,
+                        "frequency_penalty": 0
+                    }
+                },
+                {
+                    "role": "critic",
+                    "name": "critic_agent",
+                    "prompt": "You are the {critic_name}. You give a rating on from 1 to 5 on the researchers suggestions. The rating is based on the following list: {criteria_list}. You will give concrete suggestions if the score is under 5. You will give feedback if the result does not have four pointer, containing the criteria given by the user_proxy You will pause and wait for user feedback after giving 4 / 5 or above.",
+                    "config": {
+                        "temperature": 0.5,
+                        "frequency_penalty": 0.3
+                    },
+                    "criteria_list": [
+                        "Is the text relevant to the topic?",
+                        "Is the text grammatically correct?",
+                        "Is the text concise?",
+                        "Based on the knowledge you have, are the facts correct?"
+                    ]
+                }
+            ]
+        },
+        "publish": {
+            "roles": [
+                {
+                    "role": "analytics_user",
+                    "name": "user_proxy",
+                    "prompt": "What conclusions can you draw from this instagram data that has been loaded with langchain CSVLoader: {data} and what focus points can you give the instagram_publisher based on this?"
+                },
+                {
+                    "role": "analyst",
+                    "name": "analytics_agent",
+                    "prompt": "You are a analyst. You are tasked with drawing conclusion the this set of data that has been loaded with langchain CSVLoader: {data}. You will then provide some insights and focus points to the instagram_publisher based on this.",
+                    "config": {
+                        "temperature": 0,
+                        "frequency_penalty": 0
+                    }
+                },
+                {
+                    "role": "instagram_user",
+                    "name": "user_proxy",
+                    "prompt": "Create an Instagram caption based on the input data and the following theme: {theme} that is somehow related to Gin or to the Gin produces Stookers Gin. The output should be text with hashtags at the end. I want the hashtags: #Stookers #Amsterdam to always be present. Do not thank each other for the feedback."
+                },
+                {
+                    "role": "instagram_publisher",
+                    "name": "publisher_agent",
+                    "prompt": "You are the {instagram_publisher_name}. I want you to write a caption based on this theme {theme} and take in to account the insights given by the analytics_agent. After each iteration you will wait for the content_reviewer's feedback on the content. The final result should be a short instagram caption with hashtags at the end. You do not use polite phrases and all answers will be in the requested format, with no other text.",
+                    "config": {
+                        "temperature": 0.5,
+                        "frequency_penalty": 0.3
+                    }
+                },
+                {
+                    "role": "instagram_critic",
+                    "name": "critic_agent",
+                    "prompt": "You are the {critic_name}. You give a rating on from 1 to 5 on the {instagram_publisher_name} suggestions. The rating is based on the following list: {criteria_list}. You will give concrete suggestions if the score is under 5. You should also check that {instagram_publisher_name} sticks to the theme: {theme}. IMPORTANT: make sure the text is suitable for a instagram caption! You will pause and wait for user feedback after giving 4 / 5 or above. If the output is not in the format of a single string with hashtags at the end, you will ask the tweeter correct it.",
+                    "config": {
+                        "temperature": 0.5,
+                        "frequency_penalty": 0.3
+                    },
+                    "criteria_list": [
+                        "Is the text instagram friendly?",
+                        "Is the text grammatically correct?",
+                        "Is the text concise?",
+                        "Is the text relevant to the topic?",
+                        "Did the tweet take into consideration the analytics_agent's insights?"
+                    ]
+                }
+            ]
+        },
+        "image": {
+            "roles": [
+                {
+                    "role": "user",
+                    "name": "user_proxy",
+                    "prompt": "You are part of a team consisting: 1. an {image_agent_name}, that creates prompts that are then used for creating an image. 2. A function_agent that uses the propmt by the image agent to call a function, which returns an url. 3. A coder_agent that creates a python code for downloading an image from an url 4. A user_proxy that executes the python code using the command python3. Do not thank each other for the feedback.",
+                    "config": {
+                        "temperature": 0.5,
+                        "frequency_penalty": 0.3
+                    }
+                },
+                {
+                    "role": "image creator",
+                    "name": "image_agent",
+                    "prompt": "You are the {image_agent_name}. You will create a prompt based on this text: {prompt}. The prompts should be short and descriptive, so that it can be used in dall-e 3 for creating a prompt based image.",
+                    "config": {
+                        "temperature": 0.5,
+                        "frequency_penalty": 0.3
+                    }
+                }
+            ]
+        }
+    }
+}

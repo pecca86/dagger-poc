@@ -21,7 +21,7 @@ class AppConfig:
         self.twitter_bearer_token = config('TWITTER_BEARER_TOKEN')
         self.twitter_oauth2_client_id = config('TWITTER_OAUTH2_CLIENT_ID')
         self.twitter_oauth2_client_secret = config('TWITTER_OAUTH2_CLIENT_SECRET')
-        self.twitter_with_image = config('TWITTER_WITH_IMAGE')
+        self.twitter_with_image = False
         #Instagram
         self.instagram_long_term_access_token = config('INSTAGRAM_LONG_TERM_ACCESS_TOKEN')
         self.meta_instagram_app_id = config("META_INSTAGRAM_APP_ID")

@@ -2,6 +2,7 @@ import logging
 import os
 import shutil
 import time
+import requests
 import csv
 from PIL import Image
 from enums.platform import Platform
@@ -143,3 +144,14 @@ def read_first_line(file_path: str) -> str:
     except (FileNotFoundError, IOError) as e:
         logger.error(f"Error: Could not read file: {e}")
 
+def download_file(url, target_path):
+    """
+    Downloads a file from the given url and saves it to the target path
+    """
+    try:
+        response = requests.get(url, stream=True)
+        with open(target_path, "wb") as file:
+            shutil.copyfileobj(response.raw, file)
+        logger.info(f"Downloaded file from {url} to {target_path}")
+    except (FileNotFoundError, IOError) as e:
+        logger.error(f"Error: Could not download file: {e}")

@@ -74,17 +74,21 @@ def main(theme: str, platforms: list, analytics: bool = False, clear_cache:bool 
     #          Twitter Flow
     # ----------------------------------------
     if "twitter" in platforms:
-        print("Twitter flow")
+        logging.info("Twitter flow")
 
-        # Refine collected data
-        research_team = ResearchTeam(theme=theme, platform=Platform.TWITTER)
-        research_data = research_team.research_results()
+        if "fun" in platforms:
+            logging.info("Twitter fun fact flow")
+            research_team = ResearchTeam(theme=theme, platform=Platform.TWITTER)
+            research_data = research_team.research_results()
 
-        # Create social media content based on the collected data
-        twitter_team = TeamTwitter(data=research_data)
-        twitter_team.post_tweet(
-            theme, with_image=config.twitter_with_image
-        )
+            twitter_team = TeamTwitter(data=research_data)
+            twitter_team.tweet_fun_fact(
+                theme, with_image=config.twitter_with_image
+            )
+
+        if "marketing" in platforms:
+            twitter_team = TeamTwitter(data=None)
+            twitter_team.tweet_marketing()
 
     # ----------------------------------------
     #          Instagram Flow
@@ -154,7 +158,7 @@ if __name__ == "__main__":
         "platforms",
         type=str,
         # nargs="+",
-        choices=["twitter", "instagram-analytics", "instagram-user", "instagram-marketing", "instagram-fun", "facebook"],
+        choices=["twitter", "twitter-analytics", "twitter-fun", "twitter-marketing", "instagram-analytics", "instagram-user", "instagram-marketing", "instagram-fun", "facebook"],
     )
 
     parser.add_argument(
