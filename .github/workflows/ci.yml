@@ -34,6 +34,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install dagger-io
+          pip install decouple
       # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Install dagger
