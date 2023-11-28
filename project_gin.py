@@ -38,6 +38,10 @@ def main(theme: str, platforms: list, analytics: bool = False, clear_cache:bool 
     # ----------------------------------------
     #          Init Log
     # ----------------------------------------
+    # create folder logs if it does not exist
+    if not os.path.exists('./logs'):
+        os.makedirs('./logs')
+        
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     logging.basicConfig(filename=f"./logs/log-{timestamp}.log", level=logging.INFO,
                         format='[%(asctime)s %(levelname)s] %(message)s',
