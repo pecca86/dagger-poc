@@ -42,6 +42,12 @@ jobs:
       - name: Run dagger
         run: python3 ci/docker_hub.py
 
+      - name: Configurate twurl
+        uses: appleboy/ssh-action@master
+        with:
+          script: |
+            cd /app
+
       - name: Install Docker on EC2
         uses: appleboy/ssh-action@master
         with:

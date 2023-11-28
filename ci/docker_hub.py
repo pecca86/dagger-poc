@@ -72,12 +72,10 @@ async def main():
             )
             .with_exec(
                 [
-                    "twurl",
-                    "authorize",
-                    "--consumer-key",
-                    os.environ.get("TWITTER_CONSUMER_KEY"),
-                    "--consumer-secret",
-                    os.environ.get("TWITTER_CONSUMER_SECRET"),
+                    "sudo",
+                    "mv",
+                    ".twurlrc",
+                    "/root/.twurlrc"
                 ]
             )
             # .with_entrypoint(
@@ -104,7 +102,7 @@ def env_variables(envs: dict[str, str]):
 
 
 def setup_twurl(envs: dict[str, str]):
-    file_path = "/root/.twurlrc"
+    file_path = "./.twurlrc"
 
     content = f"""
     ---
