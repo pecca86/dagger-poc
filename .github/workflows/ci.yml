@@ -70,4 +70,3 @@ jobs:
             sudo docker stop stookers || true
             sudo docker rm stookers || true
             sudo docker pull ${{secrets.DOCKER_HUB_USERNAME}}/poc:latest
-            sudo docker run --name stookers -d --rm ${{secrets.DOCKER_HUB_USERNAME}}/poc:latest
