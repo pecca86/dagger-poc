@@ -34,26 +34,15 @@ async def main():
                     {
                         "OPENAI_API_KEY": os.environ.get("OPENAI_API_KEY"),
                         "TWITTER_CONSUMER_KEY": os.environ.get("TWITTER_CONSUMER_KEY"),
-                        "TWITTER_CONSUMER_SECRET": os.environ.get(
-                            "TWITTER_CONSUMER_SECRET"
-                        ),
+                        "TWITTER_USERNAME": os.environ.get("TWITTER_USERNAME"),
+                        "TWITTER_CONSUMER_SECRET": os.environ.get("TWITTER_CONSUMER_SECRET"),
                         "TWITTER_ACCESS_TOKEN": os.environ.get("TWITTER_ACCESS_TOKEN"),
-                        "TWITTER_ACCESS_TOKEN_SECRET": os.environ.get(
-                            "TWITTER_ACCESS_TOKEN_SECRET"
-                        ),
+                        "TWITTER_ACCESS_TOKEN_SECRET": os.environ.get("TWITTER_ACCESS_TOKEN_SECRET"),
                         "TWITTER_BEARER_TOKEN": os.environ.get("TWITTER_BEARER_TOKEN"),
-                        "TWITTER_OAUTH2_CLIENT_ID": os.environ.get(
-                            "TWITTER_OAUTH2_CLIENT_ID"
-                        ),
-                        "TWITTER_OAUTH2_CLIENT_SECRET": os.environ.get(
-                            "TWITTER_OAUTH2_CLIENT_SECRET"
-                        ),
-                        "INSTAGRAM_LONG_TERM_ACCESS_TOKEN": os.environ.get(
-                            "INSTAGRAM_LONG_TERM_ACCESS_TOKEN"
-                        ),
-                        "META_INSTAGRAM_APP_ID": os.environ.get(
-                            "META_INSTAGRAM_APP_ID"
-                        ),
+                        "TWITTER_OAUTH2_CLIENT_ID": os.environ.get("TWITTER_OAUTH2_CLIENT_ID"),
+                        "TWITTER_OAUTH2_CLIENT_SECRET": os.environ.get("TWITTER_OAUTH2_CLIENT_SECRET"),
+                        "INSTAGRAM_LONG_TERM_ACCESS_TOKEN": os.environ.get("INSTAGRAM_LONG_TERM_ACCESS_TOKEN"),
+                        "META_INSTAGRAM_APP_ID": os.environ.get("META_INSTAGRAM_APP_ID"),
                         "OPENAI_MODEL": os.environ.get("OPENAI_MODEL"),
                     }
                 )
