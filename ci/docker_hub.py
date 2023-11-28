@@ -10,10 +10,11 @@ import os
 
 from decouple import config
 
+
 async def main():
     async with dagger.Connection(dagger.Config(log_output=sys.stderr)) as client:
         # Cache
-        python_cache = client.cache_volume("python") 
+        python_cache = client.cache_volume("python")
         # set secret from argument
         password_argument = os.environ.get("DOCKER_HUB_PASSWORD")
         # set secret as string value
@@ -33,15 +34,27 @@ async def main():
                     {
                         "OPENAI_API_KEY": os.environ.get("OPENAI_API_KEY"),
                         "TWITTER_CONSUMER_KEY": os.environ.get("TWITTER_CONSUMER_KEY"),
-                        "TWITTER_CONSUMER_SECRET": os.environ.get("TWITTER_CONSUMER_SECRET"),
+                        "TWITTER_CONSUMER_SECRET": os.environ.get(
+                            "TWITTER_CONSUMER_SECRET"
+                        ),
                         "TWITTER_ACCESS_TOKEN": os.environ.get("TWITTER_ACCESS_TOKEN"),
-                        "TWITTER_ACCESS_TOKEN_SECRET": os.environ.get("TWITTER_ACCESS_TOKEN_SECRET"),
+                        "TWITTER_ACCESS_TOKEN_SECRET": os.environ.get(
+                            "TWITTER_ACCESS_TOKEN_SECRET"
+                        ),
                         "TWITTER_BEARER_TOKEN": os.environ.get("TWITTER_BEARER_TOKEN"),
-                        "TWITTER_OAUTH2_CLIENT_ID": os.environ.get("TWITTER_OAUTH2_CLIENT_ID"),
-                        "TWITTER_OAUTH2_CLIENT_SECRET": os.environ.get("TWITTER_OAUTH2_CLIENT_SECRET"),
-                        "INSTAGRAM_LONG_TERM_ACCESS_TOKEN": os.environ.get("INSTAGRAM_LONG_TERM_ACCESS_TOKEN"),
-                        "META_INSTAGRAM_APP_ID": os.environ.get("META_INSTAGRAM_APP_ID"),
-                        "AUTOGEN_MODEL": os.environ.get("AUTOGEN_MODEL"),
+                        "TWITTER_OAUTH2_CLIENT_ID": os.environ.get(
+                            "TWITTER_OAUTH2_CLIENT_ID"
+                        ),
+                        "TWITTER_OAUTH2_CLIENT_SECRET": os.environ.get(
+                            "TWITTER_OAUTH2_CLIENT_SECRET"
+                        ),
+                        "INSTAGRAM_LONG_TERM_ACCESS_TOKEN": os.environ.get(
+                            "INSTAGRAM_LONG_TERM_ACCESS_TOKEN"
+                        ),
+                        "META_INSTAGRAM_APP_ID": os.environ.get(
+                            "META_INSTAGRAM_APP_ID"
+                        ),
+                        "OPENAI_MODEL": os.environ.get("OPENAI_MODEL"),
                     }
                 )
             )
@@ -58,12 +71,15 @@ async def main():
 
     print(f"Published at: {addr}")
 
+
 # all environment variables that are passed into GitHub actions, from the repository secrets
 def env_variables(envs: dict[str, str]):
     def env_variables_inner(source: dagger.Container):
         for key, value in envs.items():
             source = source.with_env_variable(key, value)
         return source
+
     return env_variables_inner
+
 
 anyio.run(main)

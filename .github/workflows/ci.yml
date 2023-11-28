@@ -20,27 +20,27 @@ jobs:
       TWITTER_OAUTH2_CLIENT_SECRET: ${{ secrets.TWITTER_OAUTH2_CLIENT_SECRET }}
       INSTAGRAM_LONG_TERM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_LONG_TERM_ACCESS_TOKEN }}
       META_INSTAGRAM_APP_ID: ${{ secrets.META_INSTAGRAM_APP_ID }}
-      AUTOGEN_MODEL: ${{ vars.AUTOGEN_MODEL }}
+      OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
       NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
-      # - name: Set up Python 3.10
-      #   uses: actions/setup-python@v3
-      #   with:
-      #     python-version: "3.10"
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
 
-      # - name: Install dependencies
-      #   run: |
-      #     python -m pip install --upgrade pip
-      #     pip install dagger-io
-      #     if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install dagger-io
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      # - name: Install dagger
-      #   run: pip install dagger-io
+      - name: Install dagger
+        run: pip install dagger-io
 
-      # - name: Run dagger
-      #   run: python3 ci/docker_hub.py
+      - name: Run dagger
+        run: python3 ci/docker_hub.py
 
       - name: Install Docker on EC2
         uses: appleboy/ssh-action@master
@@ -58,13 +58,6 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y docker-ce docker-ce-cli containerd.io
             sudo docker --version
-
-      # - name: Login to Docker Hub
-      #   uses: docker/login-action@v3
-      #   with:
-      #     username: ${{ secrets.DOCKER_HUB_USERNAME }}
-      #     password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-      #     logout: false
 
       - name: Deploy to EC2 Instance
         uses: appleboy/ssh-action@master
