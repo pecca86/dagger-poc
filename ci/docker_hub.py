@@ -22,7 +22,8 @@ async def main():
         # create container
         source = (
             client.container()
-            .from_("amd64/ubuntu")
+            # .from_("amd64/ubuntu")
+            .from_("linux/amd64")
             .with_directory(
                 "/app", client.host().directory("."), exclude=["ci/", "configs/.env"]
             )
