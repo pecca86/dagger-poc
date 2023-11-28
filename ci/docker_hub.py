@@ -61,7 +61,7 @@ async def main():
             .with_exec(["env"])
             .with_exec(["python3", "./configs/setup_twurl.py"])
             .with_exec(["ls", "-a"])
-            .with_exec(["sudo", "mv", ".twurlrc", "/root"])
+            .with_exec(["mv", ".twurlrc", "/root"])
             # .with_entrypoint(
             #     ["python3", "project_gin.py", "-p", "twitter", "instagram", "-a" "True"]
             # )
