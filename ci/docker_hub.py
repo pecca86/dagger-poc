@@ -58,15 +58,18 @@ async def main():
                     }
                 )
             )
-            .with(setup_twurl({
-                "TWITTER_CONSUMER_KEY": os.environ.get("TWITTER_CONSUMER_KEY"),
-                "TWITTER_CONSUMER_SECRET": os.environ.get("TWITTER_CONSUMER_SECRET"),
-                "TWITTER_ACCESS_TOKEN": os.environ.get("TWITTER_ACCESS_TOKEN"),
-                "TWITTER_ACCESS_TOKEN_SECRET": os.environ.get("TWITTER_ACCESS_TOKEN_SECRET"),
-                "TWITTER_BEARER_TOKEN": os.environ.get("TWITTER_BEARER_TOKEN"),
-            }))
             .with_exec(["env"])
-            # setup twurl
+            .with_(
+                setup_twurl(
+                    {
+                        "TWITTER_CONSUMER_KEY": os.environ.get("TWITTER_CONSUMER_KEY"),
+                        "TWITTER_CONSUMER_SECRET": os.environ.get("TWITTER_CONSUMER_SECRET"),
+                        "TWITTER_ACCESS_TOKEN": os.environ.get("TWITTER_ACCESS_TOKEN"),
+                        "TWITTER_ACCESS_TOKEN_SECRET": os.environ.get("TWITTER_ACCESS_TOKEN_SECRET",
+                        "TWITTER_BEARER_TOKEN": os.environ.get("TWITTER_BEARER_TOKEN"),
+                    }
+                )
+            )
             .with_exec(
                 [
                     "twurl",
@@ -99,10 +102,11 @@ def env_variables(envs: dict[str, str]):
 
     return env_variables_inner
 
+
 def setup_twurl(envs: dict[str, str]):
     file_path = "/root/.twurlrc"
 
-    content = f'''
+    content = f"""
     ---
     profiles:
         gin_sipper:
@@ -117,10 +121,11 @@ def setup_twurl(envs: dict[str, str]):
         - {os.environ.get('TWITTER_USERNAME')} #TWITTER_USERNAME
         - {os.environ.get('TWITTER_CONSUMER_KEY')} #TWITTER_CONSUMER_KEY
     bearer_tokens:
-        {os.environ.get('TWITTER_CONSUMER_KEY')}: {os.environ.get('TWITTER_BEARER_TOKEN')}'''
+        {os.environ.get('TWITTER_CONSUMER_KEY')}: {os.environ.get('TWITTER_BEARER_TOKEN')}"""
 
-    with open(file_path, 'w') as file:
+    with open(file_path, "w") as file:
         file.write(content)
         pass
+
 
 anyio.run(main)
