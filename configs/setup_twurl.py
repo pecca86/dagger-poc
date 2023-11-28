@@ -5,7 +5,7 @@ file_path = "./.twurlrc"
 content = f"""
 ---
 profiles:
-    gin_sipper:
+    {os.environ.get('TWITTER_USERNAME')}:
         {os.environ.get('TWITTER_CONSUMER_KEY')}:
             username: {os.environ.get('TWITTER_USERNAME')}
             consumer_key: {os.environ.get('TWITTER_CONSUMER_KEY')}
