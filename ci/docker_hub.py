@@ -22,8 +22,7 @@ async def main():
         # create container
         source = (
             client.container()
-            # .from_("amd64/ubuntu")
-            .from_("linux/amd64")
+            .from_("amd64/ubuntu")
             .with_directory(
                 "/app", client.host().directory("."), exclude=["ci/", "configs/.env"]
             )
@@ -61,7 +60,6 @@ async def main():
             )
             .with_exec(["env"])
             .with_exec(["python3", "./configs/setup_twurl.py"])
-            .with_exec(["ls", "-a"])
             .with_exec(["mv", ".twurlrc", "/root"])
             # .with_entrypoint(
             #     ["python3", "project_gin.py", "-p", "twitter", "instagram", "-a" "True"]

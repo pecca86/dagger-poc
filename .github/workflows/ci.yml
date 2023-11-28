@@ -35,7 +35,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install dagger-io
           pip install python-decouple==3.8
-      # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Install dagger
         run: pip install dagger-io
@@ -43,31 +43,31 @@ jobs:
       - name: Run dagger
         run: python3 ci/docker_hub.py
 
-      # - name: Install Docker on EC2
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.EC2_HOST }}
-      #     username: ${{ secrets.EC2_USERNAME }}
-      #     key: ${{ secrets.EC2_KEY }}
-      #     script: |
-      #       sudo apt-get update
-      #       sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
-      #       curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-      #       echo \
-      #         "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-      #         $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-      #       sudo apt-get update
-      #       sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-      #       sudo docker --version
+      - name: Install Docker on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            sudo apt-get update
+            sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+            echo \
+              "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+              $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            sudo apt-get update
+            sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+            sudo docker --version
 
-      # - name: Deploy to EC2 Instance
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.EC2_HOST }}
-      #     username: ${{ secrets.EC2_USERNAME }}
-      #     key: ${{ secrets.EC2_KEY }}
-      #     script: |
-      #       sudo echo ${{secrets.DOCKER_HUB_PASSWORD}} | sudo docker login --username ${{secrets.DOCKER_HUB_USERNAME}} --password-stdin
-      #       sudo docker stop stookers || true
-      #       sudo docker rm stookers || true
-      #       sudo docker pull ${{secrets.DOCKER_HUB_USERNAME}}/poc:latest
+      - name: Deploy to EC2 Instance
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            sudo echo ${{secrets.DOCKER_HUB_PASSWORD}} | sudo docker login --username ${{secrets.DOCKER_HUB_USERNAME}} --password-stdin
+            sudo docker stop stookers || true
+            sudo docker rm stookers || true
+            sudo docker pull ${{secrets.DOCKER_HUB_USERNAME}}/poc:latest
