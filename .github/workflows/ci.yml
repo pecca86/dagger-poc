@@ -56,7 +56,6 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            sudo su
             sudo docker stop stookers || true
             sudo docker rm stookers || true
             sudo docker pull ${{secrets.DOCKER_HUB_USERNAME}}/poc:latest
