@@ -23,6 +23,8 @@ class TweeterV2:
             '^"|"$', "", self.tweet
         )  # cleans the double quotes from the tweet
 
+        print("Tweeting: ", cleaned_text)
+
         tweet_with_text_cmd = (
             'twurl -A "Content-Type: application/json" -X POST "/2/tweets" -d \'{"text": "'
             + cleaned_text
