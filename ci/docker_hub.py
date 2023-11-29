@@ -17,8 +17,11 @@ async def main():
         python_cache = client.cache_volume("python")
         # set secret from argument
         password_argument = os.environ.get("DOCKER_HUB_PASSWORD")
+        docker_hub_username_argument = os.environ.get("DOCKER_HUB_USERNAME")
         # set secret as string value
         secret = client.set_secret("password", password_argument)
+        docker_hub_username = client.set_secret("docker_hub_username", docker_hub_username_argument)
+        
         # create container
         source = (
             client.container()
@@ -56,8 +59,8 @@ async def main():
         )
 
         # use secret for registry authentication
-        addr = await source.with_registry_auth("docker.io", os.environ.get("DOCKER_HUB_USERNAME"), secret).publish(
-            f"{os.environ.get('DOCKER_HUB_USERNAME')}/poc:latest"
+        addr = await source.with_registry_auth("docker.io", docker_hub_username, secret).publish(
+            f"{docker_hub_username}/poc:latest"
         )
 
     print(f"Published at: {addr}")
