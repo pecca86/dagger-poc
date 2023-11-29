@@ -17,10 +17,10 @@ async def main():
         python_cache = client.cache_volume("python")
         # set secret from argument
         password_argument = os.environ.get("DOCKER_HUB_PASSWORD")
-        docker_hub_username_argument = os.environ.get("DOCKER_HUB_USERNAME")
         # set secret as string value
         secret = client.set_secret("password", password_argument)
-        docker_hub_username = client.set_secret("docker_hub_username", docker_hub_username_argument)
+        docker_hub_username = os.environ.get("DOCKER_HUB_USERNAME")
+        print("USERNAME: ", docker_hub_username)
         
         # create container
         source = (
