@@ -31,8 +31,7 @@ class ResearchTeam:
         )  # TODO: have the scraper save the data to a file, then use a RAG agent to learn from the data
         scraped_web_data = scraper.scrape(Platform.WEB)
 
-        # Create the Researcher Agent
-        # TODO: Turn in to a RAG agent
+        # TODO: Turn in to a RAG agent?
         researcher_name = "researcher"
         researcher = Researcher(
             researcher_name,
@@ -60,6 +59,8 @@ class ResearchTeam:
         # Create the User Proxy Agent
         user_proxy = autogen.UserProxyAgent(
             name="user_proxy",
+            human_input_mode="NEVER",
+            max_consecutive_auto_reply=0,
             code_execution_config=False,
         )
 

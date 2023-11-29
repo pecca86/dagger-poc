@@ -58,12 +58,12 @@ class TeamInstagram:
         team_image = TeamImage(caption)
         filename = team_image.create_image("instagram_images")
 
-        # # 6. Publish the post, with the text: 'This week's ingredients were from @username, if you want to create your own recipe, please blow in the form of 'a and b' or 'a & b. Recipe'
+        # 6. Publish the post, with the text: 'This week's ingredients were from @username, if you want to create your own recipe, please blow in the form of 'a and b' or 'a & b. Recipe'
         logging.info("Publishing post...")
         instagram_publisher = InstagramPublisher()
         response = instagram_publisher.publish(filename, caption)
 
-        # # 7. Save the post ID to a file so we can use this id next time in this flow
+        # 7. Save the post ID to a file so we can use this id next time in this flow
         logging.info("Published successfully! Saving post id...")
         file_utils.save_to_text_file("./analytics_data/ig_user_content.txt", response["id"], True)
 
@@ -226,7 +226,10 @@ class TeamInstagram:
 
         # User
         user_proxy = autogen.UserProxyAgent(
-            name="user_proxy", code_execution_config=False
+            name="user_proxy",
+            human_input_mode="NEVER",
+            max_consecutive_auto_reply=0,
+            code_execution_config=False
         )
 
         group_chat = autogen.GroupChat(

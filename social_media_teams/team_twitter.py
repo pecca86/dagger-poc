@@ -130,7 +130,10 @@ class TeamTwitter:
 
         # User
         user_proxy = autogen.UserProxyAgent(
-            name=twitter_prompts["tweet_user"]["name"], code_execution_config=False
+            name=twitter_prompts["tweet_user"]["name"],
+            human_input_mode="NEVER",
+            max_consecutive_auto_reply=0,
+            code_execution_config=False
         )
 
         group_chat = autogen.GroupChat(
@@ -165,12 +168,6 @@ class TeamTwitter:
         for v in user_proxy._oai_messages.values():
             tweet_text = v[-2]["content"]
 
-        # ----------------------------------------
-        #          I M A G E
-        # ----------------------------------------
-        if with_image:
-            team_image = TeamImage(tweet_text)
-            image_path = team_image.create_image("twitter_images")
 
         # ----------------------------------------
         #          P O S T
