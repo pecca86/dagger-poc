@@ -60,4 +60,5 @@ jobs:
             sudo echo ${{secrets.DOCKER_HUB_PASSWORD}} | sudo docker login --username ${{secrets.DOCKER_HUB_USERNAME}} --password-stdin
             sudo docker stop stookers || true
             sudo docker rm stookers || true
+            sudo docker rmi ${{secrets.DOCKER_HUB_USERNAME}}/poc:latest || true
             sudo docker pull ${{secrets.DOCKER_HUB_USERNAME}}/poc:latest
