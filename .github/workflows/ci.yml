@@ -41,7 +41,10 @@ jobs:
       #     pip install --upgrade openai==1.1.1
 
       - name: Run dagger
-        run: python3 ci/docker_hub.py
+        run: |
+          pip install dagger-io
+          pip install python-decouple==3.8
+          python3 ci/docker_hub.py
 
       - name: Install Docker on EC2
         uses: appleboy/ssh-action@master
