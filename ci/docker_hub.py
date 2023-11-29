@@ -50,15 +50,14 @@ async def main():
             .with_exec(["env"])
             .with_exec(["python3", "./configs/setup_twurl.py"])
             .with_exec(["mv", ".twurlrc", "/root"])
-            .with_exec(["mkdir", "twitter_images"])
             # .with_entrypoint(
             #     ["python3", "project_gin.py", "-p", "twitter", "instagram", "-a" "True"]
             # )
         )
 
         # use secret for registry authentication
-        addr = await source.with_registry_auth("docker.io", "pecca86", secret).publish(
-            "pecca86/poc:latest"
+        addr = await source.with_registry_auth("docker.io", os.environ.get("DOCKER_HUB_USERNAME"), secret).publish(
+            f"{os.environ.get('DOCKER_HUB_USERNAME')}/poc:latest"
         )
 
     print(f"Published at: {addr}")
