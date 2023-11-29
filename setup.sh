@@ -2,8 +2,8 @@
 echo "===> Installing dependencies..."
 apt update -y
 apt upgrade -y
-# apt-get install -y python3-pip python3-dev build-essential
-# pip install --upgrade pip
+apt-get install -y python3-pip python3-dev build-essential
+pip install --upgrade pip
 # Install curl
 apt install curl -y
 apt install python3-pycurl -y
@@ -15,8 +15,8 @@ gem install twurl
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -y | sh
 # Install Ngrok
 curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | tee /etc/apt/sources.list.d/ngrok.list && apt update && apt install ngrok
-# pip install --no-cache-dir -r /app/requirements.txt
-# pip install --upgrade openai==1.1.1
+pip install /app/requirements.txt
+pip install --upgrade openai==1.1.1
 echo $NGROK_TOKEN
 ngrok config add-authtoken $NGROK_TOKEN
 echo "===> Installation complete!"

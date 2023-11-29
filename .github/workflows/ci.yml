@@ -27,18 +27,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.10"
-          cache: "pip"
-          cache-dependency-path: "requirements.txt"
-      - run: |
-          python -m pip install --upgrade pip
-          pip install dagger-io
-          pip install python-decouple==3.8
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          pip install --upgrade openai==1.1.1
+      # - name: Set up Python 3.10
+      #   uses: actions/setup-python@v3
+      #   with:
+      #     python-version: "3.10"
+      #     cache: "pip"
+      #     cache-dependency-path: "requirements.txt"
+      # - run: |
+      #     python -m pip install --upgrade pip
+      #     pip install dagger-io
+      #     pip install python-decouple==3.8
+      #     if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      #     pip install --upgrade openai==1.1.1
 
       - name: Run dagger
         run: python3 ci/docker_hub.py
