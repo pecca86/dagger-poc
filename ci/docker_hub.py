@@ -24,7 +24,7 @@ async def main():
             client.container()
             .from_("amd64/ubuntu")
             .with_directory(
-                "/app", client.host().directory("."), exclude=["ci/", "configs/.env"]
+                "/app", client.host().directory("."), exclude=["ci/", "configs/.env", "aws/", "tmp/"]
             )
             .with_workdir("/app")
             .with_exec(["/bin/bash", "setup.sh"])
@@ -50,6 +50,7 @@ async def main():
             .with_exec(["env"])
             .with_exec(["python3", "./configs/setup_twurl.py"])
             .with_exec(["mv", ".twurlrc", "/root"])
+            .with_exec(["mkdir", "twitter_images"])
             # .with_entrypoint(
             #     ["python3", "project_gin.py", "-p", "twitter", "instagram", "-a" "True"]
             # )

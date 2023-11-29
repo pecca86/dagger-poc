@@ -55,7 +55,7 @@ class TeamTwitter:
             tweet_text = v[-1]["content"]
 
         # LOGGING
-        msg_dic = user_proxy._oai_messages
+        msg_dic = marketing_agent_agent._oai_messages
         for k, v in msg_dic.items():
             for item in v:
                 logging.info(f"[{item['role']}]: {item['content']}\n")
@@ -154,7 +154,7 @@ class TeamTwitter:
         # ----------------------------------------
         #          L O G S
         # ----------------------------------------
-        msg_dic = manager._oai_messages
+        msg_dic = user_proxy._oai_messages
         for k, v in msg_dic.items():
             for item in v:
                 logging.info(f"[{item['name']}]: {item['content']}\n")

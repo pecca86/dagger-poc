@@ -104,7 +104,7 @@ class TeamInstagram:
             agent_caption = v[-1]["content"]
 
         # CHAT LOGS
-        msg_dic = ingredient_user._oai_messages
+        msg_dic = ingredient_agent_agent._oai_messages
         for k, v in msg_dic.items():
             for item in v:
                 print(f"[{item['role']}]: {item['content']}\n")
@@ -153,7 +153,8 @@ class TeamInstagram:
         msg_dic = marketing_agent_agent._oai_messages
         for k, v in msg_dic.items():
             for item in v:
-                logging.info(f"[{item['name']}]: {item['content']}\n")
+                print(f"[{item['role']}]: {item['content']}\n")
+                logging.info(f"[{item['role']}]: {item['content']}\n")
             break
 
 
@@ -251,7 +252,7 @@ class TeamInstagram:
         # ----------------------------------------
         #          L O G S
         # ----------------------------------------
-        msg_dic = manager._oai_messages
+        msg_dic = user_proxy._oai_messages
         for k, v in msg_dic.items():
             for item in v:
                 logging.info(f"[{item['name']}]: {item['content']}\n")
