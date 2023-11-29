@@ -9,6 +9,7 @@ jobs:
     name: dagger
     runs-on: ubuntu-latest
     env:
+      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
       DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       TWITTER_USERNAME: ${{ secrets.TWITTER_USERNAME }}
@@ -37,6 +38,7 @@ jobs:
           pip install dagger-io
           pip install python-decouple==3.8
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install --upgrade openai==1.1.1
 
       - name: Run dagger
         run: python3 ci/docker_hub.py
