@@ -14,7 +14,7 @@ from decouple import config
 async def main():
     async with dagger.Connection(dagger.Config(log_output=sys.stderr)) as client:
         # Cache
-        pip_cache = client.cache_volume("pip")
+        # pip_cache = client.cache_volume("pip")
         # set secret from argument
         password_argument = os.environ.get("DOCKER_HUB_PASSWORD")
         # set secret as string value
@@ -31,7 +31,7 @@ async def main():
             )
             .with_workdir("/app")
             .with_exec(["/bin/bash", "setup.sh"])
-            .with_mounted_cache("~/.cache/pip", pip_cache)
+            # .with_mounted_cache("~/.cache/pip", pip_cache)
             .with_(
                 env_variables(
                     {

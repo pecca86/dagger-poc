@@ -33,7 +33,7 @@ class TeamImage:
         )
         image_agent_agent = image_agent.retrieve_agent()
 
-        banned_words = ["bottle"]
+        banned_words = ["bottle", "flask"]
         critic_agent_name = "critic_agent"
         critic_agent = Critic(
             critic_agent_name,
