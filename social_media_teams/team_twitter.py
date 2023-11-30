@@ -1,12 +1,6 @@
 import re
 import autogen
-from social_media_teams.agents.tweet_agent import TweetAgent
-from research_teams.agents.critic import Critic
-from social_media_teams.team_image import TeamImage
-from social_media_teams.utils.tweeter import Tweeter
 from social_media_teams.utils.tweeter_v2 import TweeterV2
-from analytics_teams.twitter_analytics import TwitterAnalytics
-from social_media_teams.agents.marketing_agent import MarketingAgent
 from configs.app_config import AppConfig
 import logging
 import random
@@ -31,12 +25,17 @@ class TeamTwitter:
         logging.info("** PHASE: Twitter Team - Marketing **")
 
         marketing_agent_name = instagram_prompts["marketing_agent"]["name"]
-        marketing_agent = MarketingAgent(
-            marketing_agent_name,
+
+        marketing_agent = autogen.AssistantAgent(
+            name = marketing_agent_name,
             system_message=instagram_prompts["marketing_agent"]["prompt"],
-            agent_config=self.config.autogen_config_list,
+            llm_config={
+                "config_list": self.config.autogen_config_list,
+                "temperature": instagram_prompts["marketing_agent"]["config"]["temperature"],
+                "frequency_penalty": instagram_prompts["marketing_agent"]["config"]["frequency_penalty"],
+                "timeout": 120,
+            },
         )
-        marketing_agent_agent = marketing_agent.retrieve_agent()
 
         user_proxy = autogen.UserProxyAgent(
             name="marketing_user",
@@ -46,7 +45,7 @@ class TeamTwitter:
         )
 
         user_proxy.initiate_chat(
-            marketing_agent_agent,
+            marketing_agent,
             message=instagram_prompts["marketing_user"]["prompt"],
         )
 
@@ -55,7 +54,7 @@ class TeamTwitter:
             tweet_text = v[-1]["content"]
 
         # LOGGING
-        msg_dic = marketing_agent_agent._oai_messages
+        msg_dic = marketing_agent._oai_messages
         for k, v in msg_dic.items():
             for item in v:
                 logging.info(f"[{item['role']}]: {item['content']}\n")
@@ -105,28 +104,37 @@ class TeamTwitter:
 
         # Tweeter
         tweeter_name = twitter_prompts["tweet_agent"]["name"]
-        tweeter = TweetAgent(
-            tweeter_name,
-            twitter_prompts["tweet_agent"]["prompt"]
+
+        twitter_agent = autogen.AssistantAgent(
+            name=tweeter_name,
+            system_message=twitter_prompts["tweet_agent"]["prompt"]
             .replace("{data}", self.data)
             .replace("{tweeter_name}", tweeter_name),
-            self.config.autogen_config_list,
+            llm_config={
+                "config_list": self.config.autogen_config_list,
+                "temperature": twitter_prompts["tweet_agent"]["config"]["temperature"],
+                "frequency_penalty": twitter_prompts["tweet_agent"]["config"]["frequency_penalty"],
+                "timeout": 120,
+            }
         )
-        twitter_agent = tweeter.retrieve_agent()
 
         # Critic
         criteria_list = str(twitter_prompts["tweet_critic"]["criteria_list"])
         critic_name = twitter_prompts["tweet_critic"]["name"]
-        critic = Critic(
-            critic_name,
-            twitter_prompts["tweet_critic"]["prompt"]
+        critic_agent = autogen.AssistantAgent(
+            name=critic_name,
+            system_message=twitter_prompts["tweet_critic"]["prompt"]
             .replace("{tweeter_name}", tweeter_name)
             .replace("{criteria_list}", criteria_list)
             .replace("{critic_name}", critic_name)
             .replace("{theme}", theme),
-            self.config.autogen_config_list,
+            llm_config={
+                "config_list": self.config.autogen_config_list,
+                "temperature": twitter_prompts["tweet_critic"]["config"]["temperature"],
+                "frequency_penalty": twitter_prompts["tweet_critic"]["config"]["frequency_penalty"],
+                "timeout": 120,
+            }
         )
-        critic_agent = critic.retrieve_agent()
 
         # User
         user_proxy = autogen.UserProxyAgent(

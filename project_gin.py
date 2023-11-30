@@ -2,7 +2,6 @@ from research_teams.research_team import ResearchTeam
 from enums.platform import Platform
 from social_media_teams.team_twitter import TeamTwitter
 from social_media_teams.team_instagram import TeamInstagram
-from analytics_teams.instagram_analytics import InstagramAnalytics
 from configs.app_config import AppConfig
 from data_collection_teams.instagram_api_team.instagram_api_team import InstagramApiTeam
 import random

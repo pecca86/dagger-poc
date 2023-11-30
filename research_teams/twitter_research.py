@@ -1,5 +1,4 @@
 import autogen
-from collections import defaultdict
 
 # from agents.researcher import Researcher
 from research_teams.agents.researcher import Researcher

@@ -1,15 +1,10 @@
 import autogen
 from openai import OpenAI
-from social_media_teams.agents.image_agent import ImageAgent
-from social_media_teams.agents.coder_agent import CoderAgent
 from utils.file_utils import move_file_and_add_time_stamp
 import logging
 import os
-import shutil
-import time
 from configs.app_config import AppConfig
 from configs.prompt_config import *
-from research_teams.agents.critic import Critic
 
 logger = logging.getLogger(__name__)
 
@@ -26,21 +21,27 @@ class TeamImage:
     ) -> str:
         # Image / prompt agent
         image_agent_name = "image_agent"
-        image_agent = ImageAgent(
-            image_agent_name,
-            instagram_prompts['image_creator']["prompt"].replace("{image_agent_name}", image_agent_name).replace("{prompt}", self.prompt),
-            self.config.autogen_config_list,
+        image_agent = autogen.AssistantAgent(
+            name=image_agent_name,
+            system_message=instagram_prompts['image_creator']["prompt"].replace("{image_agent_name}", image_agent_name).replace("{prompt}", self.prompt),
+            llm_config={
+                "config_list": self.config.autogen_config_list,
+                "temperature": instagram_prompts['image_creator']["config"]["temperature"],
+                "frequency_penalty": instagram_prompts['image_creator']["config"]["frequency_penalty"],
+            }
         )
-        image_agent_agent = image_agent.retrieve_agent()
 
         banned_words = ["bottle", "flask"]
         critic_agent_name = "critic_agent"
-        critic_agent = Critic(
-            critic_agent_name,
+        critic_agent = autogen.AssistantAgent(
+            name = critic_agent_name,
             system_message=f"You are a critic. Your task is to give feedback to the {image_agent_name} based on the following: The prompt should be dall-e-3 friendly and NOT contain any of the words in this list: {str(banned_words)}. Reply TERMINATE when the task is done.",
-            agent_config=self.config.autogen_config_list,
+            llm_config={
+                "config_list": self.config.autogen_config_list,
+                "temperature": instagram_prompts['publisher_critic']["config"]["temperature"],
+                "frequency_penalty": instagram_prompts['publisher_critic']["config"]["frequency_penalty"],
+            }
         )
-        critic_agent_agent = critic_agent.retrieve_agent()
 
         # Dall-e agent
         def call_dalle(prompt) -> str:
@@ -92,12 +93,15 @@ class TeamImage:
 
         # Coder agent
         coder_agent_name = "coder_agent"
-        coder = CoderAgent(
-            coder_agent_name,
-            f"You are the {coder_agent_name}. Your task is to create a python script to download an image file from a URL given to you by the call_dalle. The file name must be 'image' Reply TERMINATE when the task is done.",
-            self.config.autogen_config_list,
+        coder_agent = autogen.AssistantAgent(
+            name = coder_agent_name,
+            system_message=f"You are the {coder_agent_name}. Your task is to create a python script to download an image file from a URL given to you by the call_dalle. The file name must be 'image' Reply TERMINATE when the task is done.",
+            llm_config={
+                "config_list": self.config.autogen_config_list,
+                "temperature": 0,
+                "frequency_penalty": 0,
+            }
         )
-        coder_agent = coder.retrieve_agent()
 
         # User proxy / coder
         user_proxy = autogen.UserProxyAgent(
@@ -112,7 +116,7 @@ class TeamImage:
         )
 
         group_chat = autogen.GroupChat(
-            agents=[image_agent_agent, critic_agent_agent, function_agent, coder_agent, user_proxy],
+            agents=[image_agent, critic_agent, function_agent, coder_agent, user_proxy],
             messages=[],
             max_round=10,
         )

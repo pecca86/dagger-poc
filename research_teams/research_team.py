@@ -1,14 +1,10 @@
 import autogen
 import logging
 from configs.app_config import AppConfig
-from research_teams.scraper import Scraper
 from enums.platform import Platform
-from research_teams.agents.researcher import Researcher
-from research_teams.agents.critic import Critic
 from configs.app_config import AppConfig
 from configs.prompt_config import *
 
-# TODO: Add logging
 logger = logging.getLogger(__name__)
 
 
@@ -25,36 +21,34 @@ class ResearchTeam:
         logging.info(f"** PHASE: {platform} Research **")
 
     def research_results(self) -> str:
-        scraper = Scraper(self.theme)
-        scraped_platform_data = scraper.scrape(
-            self.platform
-        )  # TODO: have the scraper save the data to a file, then use a RAG agent to learn from the data
-        scraped_web_data = scraper.scrape(Platform.WEB)
 
-        # TODO: Turn in to a RAG agent?
         researcher_name = "researcher"
-        researcher = Researcher(
-            researcher_name,
-            # instagram_research_agent["prompt"]
-            self.prompts["research_agent"]["prompt"]
+        researcher_agent = autogen.AssistantAgent(
+            name=researcher_name,
+            system_message=self.prompts["research_agent"]["prompt"]
             .replace("{researcher_name}", researcher_name)
             .replace("{theme}", self.theme),
-            self.config.autogen_config_list,
+            llm_config={
+                "config_list": self.config.autogen_config_list,
+                "temperature": instagram_prompts["research_agent"]["config"]["temperature"],
+                "frequency_penalty": instagram_prompts["research_agent"]["config"]["frequency_penalty"],
+                "timeout": 120,
+            },
         )
-        researcher_agent = researcher.retrieve_agent()
 
-        # Create the Critic Agent
-        criteria_list = str(self.prompts["research_critic"]["criteria_list"])
         critic_name = self.prompts["research_critic"]["name"]
-        critic = Critic(
-            critic_name,
-            # instagram_research_critic["prompt"]
-            self.prompts["research_critic"]["prompt"]
+        critic_agent = autogen.AssistantAgent(
+            name=critic_name,
+            system_message=self.prompts["research_critic"]["prompt"]
             .replace("{critic_name}", critic_name)
-            .replace("{criteria_list}", criteria_list),
-            self.config.autogen_config_list,
+            .replace("{theme}", self.theme),
+            llm_config={
+                "config_list": self.config.autogen_config_list,
+                "temperature": instagram_prompts['publisher_critic']["config"]["temperature"],
+                "frequency_penalty": instagram_prompts['publisher_critic']["config"]["frequency_penalty"],
+                "timeout": 120,
+            },
         )
-        critic_agent = critic.retrieve_agent()
 
         # Create the User Proxy Agent
         user_proxy = autogen.UserProxyAgent(
@@ -80,7 +74,6 @@ class ResearchTeam:
 
         user_proxy.initiate_chat(
             manager,
-            # message=instagram_research_user["prompt"].replace("{theme}", self.theme),
             message=self.prompts["research_user"]["prompt"].replace(
                 "{theme}", self.theme
             ),

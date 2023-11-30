@@ -85,12 +85,12 @@ twitter_prompts = {
     #=====================
     # FUN FACT
     #=====================
-    # INSTAGRAM RESEARCH TEAM
+    # TWITTER RESEARCH TEAM
     "research_user": twitter_fun_fact_data['twitter_fun_facts']['research']['roles'][0],
     "research_agent": twitter_fun_fact_data['twitter_fun_facts']['research']['roles'][1],
     "research_critic": twitter_fun_fact_data['twitter_fun_facts']['research']['roles'][2],
 
-    # INSTAGRAM CONTENT TEAM
+    # TWITTER CONTENT TEAM
     ## ANALYTICS
     "analytics_user": twitter_fun_fact_data['twitter_fun_facts']['tweet']['roles'][0],
     "analytics_agent": twitter_fun_fact_data['twitter_fun_facts']['tweet']['roles'][1],

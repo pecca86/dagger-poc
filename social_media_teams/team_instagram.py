@@ -1,10 +1,5 @@
 from configs.app_config import AppConfig
-from analytics_teams.instagram_analytics import InstagramAnalytics
-from social_media_teams.agents.instagram_publisher_agent import InstagramPublisherAgent
-from research_teams.agents.critic import Critic
 from social_media_teams.team_image import TeamImage
-from social_media_teams.agents.ingredient_agent import IngredientAgent
-from social_media_teams.agents.marketing_agent import MarketingAgent
 from social_media_teams.utils.instagram_publisher import InstagramPublisher
 from data_collection_teams.instagram_api_team.instagram_api_team import InstagramApiTeam
 from configs.prompt_config import *
@@ -71,12 +66,16 @@ class TeamInstagram:
     def _create_caption(self, username, ingredients: str) -> str:
         ingredient_agent_prompt = instagram_prompts["ingredient_agent"]["prompt"]
         ingredient_agent_name = instagram_prompts["ingredient_agent"]["name"]
-        ingredient_agent = IngredientAgent(
-            name=ingredient_agent_name,
+        ingredient_agent = autogen.AssistantAgent(
+            name = ingredient_agent_name,
             system_message=ingredient_agent_prompt,
-            agent_config=self.config.autogen_config_list,
+            llm_config={
+                "config_list": self.config.autogen_config_list,
+                "temperature": instagram_prompts["ingredient_agent"]["config"]["temperature"],
+                "frequency_penalty": instagram_prompts["ingredient_agent"]["config"]["frequency_penalty"],
+                "timeout": 120,
+            },
         )
-        ingredient_agent_agent = ingredient_agent.retrieve_agent()
 
         ingredient_user = autogen.UserProxyAgent(
             name=instagram_prompts["ingredient_user"]["name"],
@@ -87,7 +86,7 @@ class TeamInstagram:
 
         if ingredients != "default":
             ingredient_user.initiate_chat(
-                ingredient_agent_agent,
+                ingredient_agent,
                 message=instagram_prompts["ingredient_user"]["prompt"].replace("{username}", username).replace("{ingredients}", ingredients)
             )
 
@@ -96,15 +95,15 @@ class TeamInstagram:
             random_ingredient_1 = random.choice(random_ingredients)
             random_ingredient_2 = random.choice(random_ingredients)
             ingredient_user.initiate_chat(
-                ingredient_agent_agent,
+                ingredient_agent,
                 message=instagram_prompts["ingredient_user_random"]["prompt"].replace("{random_ingredient_1}", random_ingredient_1).replace("{random_ingredient_2}", random_ingredient_2)
             )
 
-        for v in ingredient_agent_agent._oai_messages.values():
+        for v in ingredient_agent._oai_messages.values():
             agent_caption = v[-1]["content"]
 
         # CHAT LOGS
-        msg_dic = ingredient_agent_agent._oai_messages
+        msg_dic = ingredient_agent._oai_messages
         for k, v in msg_dic.items():
             for item in v:
                 print(f"[{item['role']}]: {item['content']}\n")
@@ -121,12 +120,16 @@ class TeamInstagram:
         logging.info("** PHASE: Instagram Team - Marketing **")
 
         marketing_agent_name = instagram_prompts["marketing_agent"]["name"]
-        marketing_agent = MarketingAgent(
-            marketing_agent_name,
+        marketing_agent = autogen.AssistantAgent(
+            name = marketing_agent_name,
             system_message=instagram_prompts["marketing_agent"]["prompt"],
-            agent_config=self.config.autogen_config_list,
+            llm_config={
+                "config_list": self.config.autogen_config_list,
+                "temperature": instagram_prompts["marketing_agent"]["config"]["temperature"],
+                "frequency_penalty": instagram_prompts["marketing_agent"]["config"]["frequency_penalty"],
+                "timeout": 120,
+            },
         )
-        marketing_agent_agent = marketing_agent.retrieve_agent()
 
         user_proxy = autogen.UserProxyAgent(
             name="marketing_user",
@@ -136,7 +139,7 @@ class TeamInstagram:
         )
 
         user_proxy.initiate_chat(
-            marketing_agent_agent,
+            marketing_agent,
             message=instagram_prompts["marketing_user"]["prompt"],
         )
 
@@ -150,7 +153,7 @@ class TeamInstagram:
         response = instagram_publisher.publish_with_url(image_url, caption)
 
         # LOGGING
-        msg_dic = marketing_agent_agent._oai_messages
+        msg_dic = marketing_agent._oai_messages
         for k, v in msg_dic.items():
             for item in v:
                 print(f"[{item['role']}]: {item['content']}\n")
@@ -200,29 +203,37 @@ class TeamInstagram:
 
         # INSTAGRAM PUBLISHER AGENT
         publisher_name = instagram_prompts["publisher_agent"]["name"]
-        publisher = InstagramPublisherAgent(
-            publisher_name,
-            # instagram_publisher_agent["prompt"]
-            instagram_prompts["publisher_agent"]["prompt"]
+
+        publisher_agent = autogen.AssistantAgent(
+            name = publisher_name,
+            system_message = instagram_prompts["publisher_agent"]["prompt"]
             .replace("{instagram_publisher_name}", publisher_name)
             .replace("{theme}", theme),
-            self.config.autogen_config_list,
+            llm_config = {
+                "config_list": self.config.autogen_config_list,
+                "temperature": instagram_prompts['publisher_agent']["config"]["temperature"],
+                "frequency_penalty": instagram_prompts['publisher_agent']["config"]["frequency_penalty"],
+                "timeout": 120,
+            }
         )
-        publisher_agent = publisher.retrieve_agent()
 
         # CRITIC AGENT
         criteria_list = str(instagram_prompts["publisher_critic"]["criteria_list"])
         critic_name = instagram_prompts["publisher_critic"]["name"]
-        critic = Critic(
-            critic_name,
-            instagram_prompts["publisher_critic"]["prompt"]
+        critic_agent = autogen.AssistantAgent(
+            name = critic_name,
+            system_message = instagram_prompts["publisher_critic"]["prompt"]
             .replace("{critic_name}", critic_name)
             .replace("{criteria_list}", criteria_list)
             .replace("{instagram_publisher_name}", publisher_name)
             .replace("{theme}", theme),
-            self.config.autogen_config_list,
+            llm_config = {
+                "config_list": self.config.autogen_config_list,
+                "temperature": instagram_prompts['publisher_critic']["config"]["temperature"],
+                "frequency_penalty": instagram_prompts['publisher_critic']["config"]["frequency_penalty"],
+                "timeout": 120,
+            }
         )
-        critic_agent = critic.retrieve_agent()
 
         # User
         user_proxy = autogen.UserProxyAgent(

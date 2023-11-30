@@ -2,7 +2,6 @@ import requests
 from configs.app_config import AppConfig
 from enums.platform import Platform
 from utils.file_utils import save_to_csv
-import shutil
 import os
 import pandas as pd
 import logging
